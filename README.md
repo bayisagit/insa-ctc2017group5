@@ -1,329 +1,354 @@
-ChopChop: Restaurant Food Ordering Application
-ChopChop is a full-stack food ordering platform designed for seamless restaurant operations and fast delivery. Built with Next.js 14, Tailwind CSS, Express.js, and integrated with Shipday for efficient delivery management, ChopChop enables customers to browse menus, place orders, pay securely, and track deliveries in real-time. Restaurants manage menus and orders, while admins oversee operations.
+# 🍽️ ChopChop: Restaurant Food Ordering Application
 
-Table of Contents
+**ChopChop** is a full-stack food ordering platform designed for seamless restaurant operations and fast delivery. Built with **Next.js 14**, **Tailwind CSS**, **Express.js**, and integrated with **Shipday** for efficient delivery management, ChopChop enables customers to browse menus, place orders, pay securely, and track deliveries in real-time. Restaurants manage menus and orders, while admins oversee operations.
 
-Features
-Tech Stack
-Architecture
-Prerequisites
-Installation
-Configuration
-Running the Application
-Usage
-Customer Flow
-Restaurant Flow
-Admin Flow
+---
 
+## 📚 Table of Contents
 
-Shipday Integration
-API Endpoints
-[Deployment](#deployment ....
-Contributing
-License
+* [Features](#features)
+* [Tech Stack](#tech-stack)
+* [Architecture](#architecture)
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+* [Configuration](#configuration)
+* [Running the Application](#running-the-application)
+* [Usage](#usage)
 
+  * [Customer Flow](#customer-flow)
+  * [Restaurant Flow](#restaurant-flow)
+  * [Admin Flow](#admin-flow)
+* [Shipday Integration](#shipday-integration)
+* [API Endpoints](#api-endpoints)
+* [Deployment](#deployment)
+* [Contributing](#contributing)
+* [License](#license)
 
-Features
+---
 
-Customer Features:
-Browse restaurants and menus with responsive UI.
-Add items to cart, calculate totals, and pay via Stripe.
-Real-time order tracking with Shipday integration.
-User authentication (email, Google) via NextAuth.js.
+## ✨ Features
 
+### Customer Features:
 
-Restaurant Features:
-Manage menus (add/edit items) via a dashboard.
-View and update order statuses (e.g., preparing, shipped).
+* Browse restaurants and menus with responsive UI.
+* Add items to cart, calculate totals, and pay via **Stripe**.
+* Real-time order tracking with **Shipday** integration.
+* User authentication (email, Google) via **NextAuth.js**.
 
+### Restaurant Features:
 
-Admin Features:
-Oversee all restaurants, orders, and users.
-Monitor delivery performance via Shipday analytics.
+* Manage menus (add/edit items) via a dashboard.
+* View and update order statuses (e.g., preparing, shipped).
 
+### Admin Features:
 
-Delivery:
-Fast delivery via Shipday’s AI-powered dispatch and tracking.
-Supports in-house and third-party drivers (US, Canada, Australia).
+* Oversee all restaurants, orders, and users.
+* Monitor delivery performance via **Shipday** analytics.
 
+### Delivery:
 
-Responsive Design: Mobile-friendly interface using Tailwind CSS.
-Scalability: PostgreSQL for robust data management.
+* Fast delivery via Shipday’s AI-powered dispatch and tracking.
+* Supports in-house and third-party drivers (US, Canada, Australia).
 
+### UI & Performance:
 
-Tech Stack
+* Responsive Design: Mobile-friendly interface using Tailwind CSS.
+* Scalability: PostgreSQL for robust data management.
 
-Frontend: Next.js 14 (React, TypeScript), Tailwind CSS, shadcn/ui
-Backend: Express.js (Node.js), REST API
-Database: PostgreSQL
-Authentication: NextAuth.js (email, Google)
-Payment: Stripe
-Delivery: Shipday API
-State Management: Zustand
-HTTP Client: Axios
-Deployment: Vercel (frontend), Render (backend)
+---
 
+## 🛠 Tech Stack
 
-Architecture
-ChopChop follows a client-server architecture with a modular design:
+| Layer       | Technology                          |
+| ----------- | ----------------------------------- |
+| Frontend    | Next.js 14, Tailwind CSS, shadcn/ui |
+| Backend     | Express.js (Node.js), REST API      |
+| Database    | PostgreSQL via Prisma ORM           |
+| Auth        | NextAuth.js (Email, Google)         |
+| Payment     | Stripe                              |
+| Delivery    | Shipday API                         |
+| State Mgmt  | Zustand                             |
+| HTTP Client | Axios                               |
+| Deployment  | Vercel (Frontend), Render (Backend) |
 
-Frontend (Next.js):
-Uses App Router for dynamic routing.
-Server-side rendering (SSR) for SEO and performance.
-Components: Home, Restaurant, Cart, OrderTracking, RestaurantDashboard, AdminDashboard.
-Tailwind CSS and shadcn/ui for styling.
+---
 
+## 🧱 Architecture
 
-Backend (Express.js):
-REST API for managing restaurants, menus, orders, and users.
-Integrates with PostgreSQL via Prisma ORM.
-Handles Shipday API calls for delivery dispatch and tracking.
+**Client-Server Architecture** with modular design.
 
+### Frontend (Next.js):
 
-Database (PostgreSQL):
-Schema: Users, Restaurants, Menus, Orders, Drivers.
+* App Router with SSR for SEO and performance.
+* Components: `Home`, `Restaurant`, `Cart`, `OrderTracking`, `RestaurantDashboard`, `AdminDashboard`.
+* Styling: Tailwind CSS and shadcn/ui.
 
+### Backend (Express.js):
 
-Shipday Integration:
-Sends orders to Shipday for driver assignment.
-Fetches real-time tracking data for customers.
+* RESTful API for managing restaurants, menus, orders, and users.
+* Shipday API calls for delivery management.
 
+### Database (PostgreSQL):
 
-External Services:
-Stripe for payments.
-NextAuth.js for secure authentication.
+* Schema includes: `Users`, `Restaurants`, `Menus`, `Orders`, `Drivers`.
 
+### External Services:
 
+* Stripe for payments.
+* NextAuth.js for authentication.
+* Shipday for delivery dispatch & tracking.
 
+---
 
-Prerequisites
+## 📦 Prerequisites
 
-Node.js: v18 or higher
-PostgreSQL: v14 or higher
-Shipday Account: API key from www.shipday.com
-Stripe Account: API keys from dashboard.stripe.com
-Vercel Account: For frontend deployment
-Render Account: For backend deployment
+* Node.js: v18+
+* PostgreSQL: v14+
+* Shipday Account: [shipday.com](https://www.shipday.com)
+* Stripe Account: [stripe.com](https://stripe.com)
+* Vercel & Render Accounts for deployment
 
+---
 
-Installation
+## 📥 Installation
 
-Clone the Repository:
+### 1. Clone the Repository:
+
+```bash
 git clone https://github.com/bayisagit/insa-ctc2017group5.git
 cd chopchop
+```
 
+### 2. Install Frontend:
 
-Frontend Setup:
+```bash
 cd frontend
 npm install
+```
 
+### 3. Install Backend:
 
-Backend Setup:
+```bash
 cd backend
 npm install
+```
 
+### 4. Setup Database:
 
-Database Setup:
+* Install PostgreSQL.
+* Create a database named `chopchop`.
+* Update `backend/prisma/schema.prisma`:
 
-Install PostgreSQL and create a database named chopchop.
-Update Prisma schema (backend/prisma/schema.prisma):datasource db {
+```prisma
+datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+```
 
+* Run migrations:
 
-Run migrations:npx prisma migrate dev --name init
+```bash
+npx prisma migrate dev --name init
+```
 
+---
 
+## ⚙️ Configuration
 
+### Frontend (`frontend/.env.local`):
 
-
-
-Configuration
-
-Environment Variables:
-
-Frontend (frontend/.env.local):NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_nextauth_secret
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 STRIPE_PUBLIC_KEY=your_stripe_public_key
+```
 
+### Backend (`backend/.env`):
 
-Backend (backend/.env):DATABASE_URL=postgresql://user:password@localhost:5432/chopchop
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/chopchop
 SHIPDAY_API_KEY=your_shipday_api_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 PORT=5000
+```
 
+### Tailwind Config (`frontend/tailwind.config.js`):
 
-
-
-Tailwind CSS (frontend/tailwind.config.js):
-/** @type {import('tailwindcss').Config} */
+```js
 module.exports = {
-  content: [
-    "./app/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
   theme: { extend: {} },
   plugins: [],
 };
+```
 
+### Shipday API Test:
 
-Shipday API:
+```bash
+curl -H "Authorization: Bearer YOUR_SHIPDAY_API_KEY" https://api.shipday.com/orders
+```
 
-Obtain API key from Shipday dashboard.
-Test API connectivity:curl -H "Authorization: Bearer YOUR_SHIPDAY_API_KEY" https://api.shipday.com/orders
+---
 
+## ▶️ Running the Application
 
+### Backend:
 
-
-
-
-Running the Application
-
-Backend:
+```bash
 cd backend
 npm run dev
+# Runs on http://localhost:5000
+```
 
+### Frontend:
 
-Runs on http://localhost:5000.
-
-
-Frontend:
+```bash
 cd frontend
 npm run dev
+# Runs on http://localhost:3000
+```
 
+### Seed Database:
 
-Runs on http://localhost:3000.
+```bash
+npx prisma db seed
+```
 
+---
 
-Database:
+## 🧭 Usage
 
-Ensure PostgreSQL is running and seeded with initial data:npx prisma db seed
+### Customer Flow
 
+* **Browse**: View restaurants at `localhost:3000`
+* **Order**: Add to cart and checkout
+* **Pay**: Stripe payment gateway
+* **Track**: Shipday tracking link via UI
 
+### Restaurant Flow
 
+* **Login**: `localhost:3000/restaurant/dashboard`
+* **Manage Menu**: Add/edit items
+* **Process Orders**: Update statuses (e.g., Preparing, Ready)
 
+### Admin Flow
 
+* **Login**: `localhost:3000/admin`
+* **Monitor**: View all restaurants and orders
+* **Analytics**: Use Shipday insights
 
-Usage
-Customer Flow
+---
 
-Browse: Visit localhost:3000 to view restaurants.
-Order: Select a restaurant, add items to cart, and proceed to checkout.
-Pay: Complete payment via Stripe.
-Track: Receive a Shipday tracking link to monitor delivery in real-time.
+## 🚚 Shipday Integration
 
-Restaurant Flow
+### Order Dispatch:
 
-Login: Access localhost:3000/restaurant/dashboard with restaurant credentials.
-Manage Menu: Add/edit menu items via the dashboard.
-Process Orders: Update order statuses (e.g., “preparing,” “ready”).
-
-Admin Flow
-
-Login: Access localhost:3000/admin with admin credentials.
-Monitor: View all restaurants, orders, and delivery statuses.
-Analytics: Use Shipday analytics to optimize delivery operations.
-
-
-Shipday Integration
-ChopChop integrates with Shipday for fast delivery:
-
-Order Dispatch:
-After payment, orders are sent to Shipday via API:const axios = require('axios');
+```js
+const axios = require('axios');
 await axios.post('https://api.shipday.com/orders', {
   orderId: order.id,
-  customer: { name: user.name, address: user.address, phone: user.phone },
-  restaurant: { name: 'ChopChop', address: restaurant.address },
+  customer: {
+    name: user.name,
+    address: user.address,
+    phone: user.phone,
+  },
+  restaurant: {
+    name: 'ChopChop',
+    address: restaurant.address,
+  },
 }, {
   headers: { Authorization: `Bearer ${process.env.SHIPDAY_API_KEY}` },
 });
+```
 
+### Tracking:
 
-
-
-Tracking:
-Fetch real-time driver updates:const tracking = await axios.get(`https://api.shipday.com/orders/${orderId}`, {
+```js
+const tracking = await axios.get(`https://api.shipday.com/orders/${orderId}`, {
   headers: { Authorization: `Bearer ${process.env.SHIPDAY_API_KEY}` },
 });
+```
 
+Display tracking map on the order detail page.
 
-Display tracking on the customer’s order page using Google Maps.
+---
 
+## 🔌 API Endpoints
 
+### Restaurants:
 
+* `GET /api/restaurants`
+* `POST /api/restaurants` (Admin)
 
-API Endpoints
-Backend (Express.js)
+### Menus:
 
-Restaurants:
-GET /api/restaurants: List all restaurants.
-POST /api/restaurants: Create a restaurant (admin only).
+* `GET /api/menus/:restaurantId`
+* `POST /api/menus` (Restaurant role)
 
+### Orders:
 
-Menus:
-GET /api/menus/:restaurantId: Get menu for a restaurant.
-POST /api/menus: Add menu item (restaurant role).
+* `POST /api/orders`
+* `GET /api/orders/:id`
 
+### Users:
 
-Orders:
-POST /api/orders: Create an order.
-GET /api/orders/:id: Get order details and tracking.
+* `GET /api/users/me`
 
+### Shipday API:
 
-Users:
-GET /api/users/me: Get user profile (authenticated).
+* `POST /orders`: Dispatch order
+* `GET /orders/:id`: Tracking
 
+---
 
+## 🚀 Deployment
 
-Shipday API
+### Frontend (Vercel):
 
-POST /orders: Dispatch order to drivers.
-GET /orders/:id: Fetch tracking data.
-
-
-Deployment
-
-Frontend (Vercel):
+```bash
 cd frontend
 vercel --prod
+```
 
+* Set environment variables in Vercel dashboard.
 
-Set environment variables in Vercel dashboard.
+### Backend (Render):
 
+* Push to GitHub.
+* Deploy on Render.
+* Set environment variables in Render dashboard.
 
-Backend (Render):
+### Database:
 
-Push backend to a GitHub repository.
-Deploy on Render, linking to PostgreSQL add-on.
-Set environment variables in Render dashboard.
+* Use a managed PostgreSQL (Neon, Render, etc.)
+* Update `DATABASE_URL`
 
+### Post-Deployment:
 
-Database:
+* Test Shipday delivery dispatch
+* Test Stripe payments
+* Check responsive UI
 
-Use a managed PostgreSQL service (e.g., Neon or Render).
-Update DATABASE_URL in backend .env.
+---
 
+## 🤝 Contributing
 
-Post-Deployment:
+1. Fork the repository
+2. Create a branch: `git checkout -b feature/xyz`
+3. Commit changes: `git commit -m "Add feature xyz"`
+4. Push to GitHub: `git push origin feature/xyz`
+5. Open a pull request
 
-Test Shipday integration and Stripe webhooks.
-Verify responsive design across devices.
+---
 
+## 📄 License
 
+MIT License. See `LICENSE` file for details.
 
+---
 
-Contributing
-
-Fork the repository.
-Create a feature branch (git checkout -b feature/xyz).
-Commit changes (git commit -m "Add feature xyz").
-Push to the branch (git push origin feature/xyz).
-Open a pull request.
-
-
-License
-MIT License. See LICENSE for details.
+### Made with ❤️ by Insa and the ChopChop Team
