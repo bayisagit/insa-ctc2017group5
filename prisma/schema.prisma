@@ -34,41 +34,103 @@ enum PaymentMethod {
 }
 
 model User {
-  id          String      @id @default(uuid())
-  email       String      @unique
-  password    String
-  firstName   String
-  lastName    String
-  phone       String?
-  addresses   Address[]   @relation("UserAddresses")
-  orders      Order[]
-  reviews     Review[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  email         String      @unique
+  password      String
+  firstName     String
+  lastName      String
+  phone         String?
+  emailVerified Boolean
+  image         String?
+
+  addresses     Address[]   @relation("UserAddresses")
+  orders        Order[]
+  reviews       Review[]
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  createdAt DateTime
+  updatedAt DateTime
+
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String    @id
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@map("verifications")
 }
 
 model Address {
   id             String       @id @default(uuid())
-  userId         String?
-  user           User?        @relation("UserAddresses", fields: [userId], references: [id])
-  restaurants    Restaurant[] @relation("RestaurantAddress")
-  deliveryOrders Order[]      @relation("OrderDeliveryAddress")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
   street         String
   city           String
   state          String
   postalCode     String
   country        String       @default("US")
   isDefault      Boolean      @default(false)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+
+  userId         String?
+  user           User?        @relation("UserAddresses", fields: [userId], references: [id])
+  restaurants    Restaurant[] @relation("RestaurantAddress")
+  deliveryOrders Order[]      @relation("OrderDeliveryAddress")
+
+  @@map("addresses")
 }
 
 model Restaurant {
   id            String        @id @default(uuid())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
   name          String
   description   String?
-  addressId     String
-  address       Address       @relation("RestaurantAddress", fields: [addressId], references: [id])
   phone         String
   email         String
   logo          String?
@@ -79,76 +141,98 @@ model Restaurant {
   orders        Order[]
   openingHours  OpeningHour[]
   reviews       Review[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+
+  addressId     String
+  address       Address       @relation("RestaurantAddress", fields: [addressId], references: [id])
+
+  @@map("restaurants")
 }
 
 model Category {
   id            String      @id @default(uuid())
-  name          String
-  description   String?
-  restaurantId  String
-  restaurant    Restaurant  @relation(fields: [restaurantId], references: [id])
-  menuItems     MenuItem[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+
+  name          String
+  description   String?
+  menuItems     MenuItem[]
+
+  restaurantId  String
+  restaurant    Restaurant  @relation(fields: [restaurantId], references: [id])
+
+  @@map("categories")
 }
 
 model MenuItem {
   id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
   name         String
   description  String?
   price        Float
   image        String?
+  orderItems   OrderItem[]
+
   categoryId   String
   category     Category    @relation(fields: [categoryId], references: [id])
   restaurantId String
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
-  orderItems   OrderItem[]
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+
+  @@map("menu_items")
 }
 
 model Order {
   id                   String       @id @default(uuid())
-  userId               String
-  user                 User         @relation(fields: [userId], references: [id])
-  restaurantId         String
-  restaurant           Restaurant   @relation(fields: [restaurantId], references: [id])
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
   items                OrderItem[]
   deliveryFee          Float        @default(0)
   subtotal             Float
   total                Float
   status               OrderStatus  @default(PENDING)
-  deliveryAddressId    String
-  deliveryAddress      Address      @relation("OrderDeliveryAddress", fields: [deliveryAddressId], references: [id])
   deliveryInstructions String?
   paymentStatus        PaymentStatus @default(PENDING)
   paymentMethod        PaymentMethod
-  driverId             String?
-  driver               Driver?      @relation(fields: [driverId], references: [id])
   estimatedDeliveryTime DateTime?
   actualDeliveryTime   DateTime?
   review               Review?
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt
+
+  driverId             String?
+  driver               Driver?      @relation(fields: [driverId], references: [id])
+  deliveryAddressId    String
+  deliveryAddress      Address      @relation("OrderDeliveryAddress", fields: [deliveryAddressId], references: [id])
+  restaurantId         String
+  restaurant           Restaurant   @relation(fields: [restaurantId], references: [id])
+  userId               String
+  user                 User         @relation(fields: [userId], references: [id])
+
+  @@map("orders")
 }
 
 model OrderItem {
   id                 String      @id @default(uuid())
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  quantity           Int         @default(1)
+  price              Float
+  specialInstructions String?
+
   orderId            String
   order              Order       @relation(fields: [orderId], references: [id])
   menuItemId         String
   menuItem           MenuItem    @relation(fields: [menuItemId], references: [id])
-  quantity           Int         @default(1)
-  price              Float
-  specialInstructions String?
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
+
+  @@map("order_items")
 }
 
 model Driver {
   id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
   firstName   String
   lastName    String
   email       String      @unique
@@ -159,34 +243,42 @@ model Driver {
   currentLat  Float?
   currentLng  Float?
   orders      Order[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+
+  @@map("drivers")
 }
 
 model OpeningHour {
   id           String      @id @default(uuid())
-  restaurantId String
-  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
-  dayOfWeek    Int         // 0-6 (Sunday-Saturday)
-  openingTime  String      // e.g., "09:00"
-  closingTime  String      // e.g., "21:00"
-  isClosed     Boolean     @default(false)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+
+  dayOfWeek    Int
+  openingTime  String
+  closingTime  String
+  isClosed     Boolean     @default(false)
+
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+
+  @@map("opening_hours")
 }
 
 model Review {
   id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  rating        Int
+  comment       String?
+  driverRating  Int?
+  driverComment String?
+
   orderId       String      @unique
   order         Order       @relation(fields: [orderId], references: [id])
   userId        String
   user          User        @relation(fields: [userId], references: [id])
   restaurantId  String
   restaurant    Restaurant  @relation(fields: [restaurantId], references: [id])
-  rating        Int
-  comment       String?
-  driverRating  Int?
-  driverComment String?
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+
+  @@map("reviews")
 }
