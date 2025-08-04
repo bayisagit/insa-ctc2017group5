@@ -1,0 +1,284 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  PENDING
+  ACCEPTED
+  PREPARING
+  READY_FOR_DELIVERY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  PAYPAL
+  MOBILE_PAYMENT
+}
+
+model User {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  email         String      @unique
+  password      String
+  firstName     String
+  lastName      String
+  phone         String?
+  emailVerified Boolean
+  image         String?
+
+  addresses     Address[]   @relation("UserAddresses")
+  orders        Order[]
+  reviews       Review[]
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  createdAt DateTime
+  updatedAt DateTime
+
+  expiresAt DateTime
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String    @id
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@map("verifications")
+}
+
+model Address {
+  id             String       @id @default(uuid())
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  street         String
+  city           String
+  state          String
+  postalCode     String
+  country        String       @default("US")
+  isDefault      Boolean      @default(false)
+
+  userId         String?
+  user           User?        @relation("UserAddresses", fields: [userId], references: [id])
+  restaurants    Restaurant[] @relation("RestaurantAddress")
+  deliveryOrders Order[]      @relation("OrderDeliveryAddress")
+
+  @@map("addresses")
+}
+
+model Restaurant {
+  id            String        @id @default(uuid())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  name          String
+  description   String?
+  phone         String
+  email         String
+  logo          String?
+  banner        String?
+  rating        Float?
+  categories    Category[]
+  menuItems     MenuItem[]
+  orders        Order[]
+  openingHours  OpeningHour[]
+  reviews       Review[]
+
+  addressId     String
+  address       Address       @relation("RestaurantAddress", fields: [addressId], references: [id])
+
+  @@map("restaurants")
+}
+
+model Category {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  name          String
+  description   String?
+  menuItems     MenuItem[]
+
+  restaurantId  String
+  restaurant    Restaurant  @relation(fields: [restaurantId], references: [id])
+
+  @@map("categories")
+}
+
+model MenuItem {
+  id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  name         String
+  description  String?
+  price        Float
+  image        String?
+  orderItems   OrderItem[]
+
+  categoryId   String
+  category     Category    @relation(fields: [categoryId], references: [id])
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+
+  @@map("menu_items")
+}
+
+model Order {
+  id                   String       @id @default(uuid())
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+
+  items                OrderItem[]
+  deliveryFee          Float        @default(0)
+  subtotal             Float
+  total                Float
+  status               OrderStatus  @default(PENDING)
+  deliveryInstructions String?
+  paymentStatus        PaymentStatus @default(PENDING)
+  paymentMethod        PaymentMethod
+  estimatedDeliveryTime DateTime?
+  actualDeliveryTime   DateTime?
+  review               Review?
+
+  driverId             String?
+  driver               Driver?      @relation(fields: [driverId], references: [id])
+  deliveryAddressId    String
+  deliveryAddress      Address      @relation("OrderDeliveryAddress", fields: [deliveryAddressId], references: [id])
+  restaurantId         String
+  restaurant           Restaurant   @relation(fields: [restaurantId], references: [id])
+  userId               String
+  user                 User         @relation(fields: [userId], references: [id])
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id                 String      @id @default(uuid())
+  createdAt          DateTime    @default(now())
+  updatedAt          DateTime    @updatedAt
+
+  quantity           Int         @default(1)
+  price              Float
+  specialInstructions String?
+
+  orderId            String
+  order              Order       @relation(fields: [orderId], references: [id])
+  menuItemId         String
+  menuItem           MenuItem    @relation(fields: [menuItemId], references: [id])
+
+  @@map("order_items")
+}
+
+model Driver {
+  id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  firstName   String
+  lastName    String
+  email       String      @unique
+  phone       String
+  vehicleType String
+  licensePlate String
+  isAvailable Boolean     @default(true)
+  currentLat  Float?
+  currentLng  Float?
+  orders      Order[]
+
+  @@map("drivers")
+}
+
+model OpeningHour {
+  id           String      @id @default(uuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  dayOfWeek    Int
+  openingTime  String
+  closingTime  String
+  isClosed     Boolean     @default(false)
+
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+
+  @@map("opening_hours")
+}
+
+model Review {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  rating        Int
+  comment       String?
+  driverRating  Int?
+  driverComment String?
+
+  orderId       String      @unique
+  order         Order       @relation(fields: [orderId], references: [id])
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  restaurantId  String
+  restaurant    Restaurant  @relation(fields: [restaurantId], references: [id])
+
+  @@map("reviews")
+}
