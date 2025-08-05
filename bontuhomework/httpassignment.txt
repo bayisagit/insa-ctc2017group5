@@ -1,0 +1,4 @@
+HTTP stands for Hypertext Transfer Protocol. It is the foundation of data communication 
+on the World Wide Web, defining how web browsers and servers communicate to exchange information. 
+Essentially, it's a set of rules 
+that dictate how web clients request and receive resources, like web pages, from servers. 
