@@ -1,0 +1,57 @@
+Linux Commands Documentation
+
+The following Linux commands are commonly used in shell environments for file management, system monitoring, text processing, networking, and more. Each command is defined below with its primary function.
+Commands
+
+ls Lists directory contents, displaying files and subdirectories.
+
+mkdir Creates new directories.
+
+echo Outputs text or variable values to the terminal or a file.
+
+catConcatenates and displays file contents or combines multiple files.
+
+man Displays the manual page for a specified command.
+
+awk Processes and analyzes text data using pattern matching and scripting.
+
+sed Stream editor for filtering and transforming text.
+
+nano Text editor for creating and editing files in the terminal.
+
+strings Extracts printable character sequences from files, often used for binary files.
+
+cal Displays a calendar for a specified month or year.
+
+cutExtracts sections from lines of text or files based on delimiters or fields.
+
+dc Arbitrary-precision calculator using reverse Polish notation.
+
+ddCopies and converts files, often used for disk images or backups.
+
+diff Compares files and displays differences between them.
+
+find Searches for files and directories based on specified criteria.
+
+tarArchives files into a single file or extracts files from an archive.
+
+less Views file contents interactively, allowing scrolling and searching.
+
+rm Removes files or directories.
+
+rmdir Removes empty directories.
+
+info Displays detailed documentation for commands in a hypertext format.
+
+wget Downloads files from the web using HTTP, HTTPS, or FTP.
+
+curl Transfers data to or from a server using various protocols (e.g., HTTP, FTP).
+
+ping Tests network connectivity to a host by sending ICMP echo requests.
+
+dig Queries DNS servers for domain name information.
+
+ip Manages network interfaces, routing, and IP addresses.
+
+kill Terminates processes by sending signals to specified process IDs.
+

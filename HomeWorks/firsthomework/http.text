@@ -1,0 +1,17 @@
+HTTP Documentation
+Overview
+HTTP (HyperText Transfer Protocol) is the protocol for transferring data over the web. It defines how clients request resources from servers and how servers respond. HTTP is stateless, with each request independent of others. HTTPS is the secure, encrypted version.
+HTTP Methods
+HTTP methods define the action to perform on a resource. Below are the primary methods and their definitions:
+1. GET
+Retrieve data from a server without modifying it. Safe and idempotent.
+2. POST
+Send data to the server to create or update a resource. Not safe, not idempotent.
+3. PUT
+Update an existing resource or create one at a specific URL. Not safe, idempotent.
+4. DELETE
+Remove a resource from the server. Not safe, idempotent.
+5. PATCH
+Partially update a resource. Not safe, not always idempotent.
+6. HEAD
+Retrieve metadata about a resource without the response body. Safe and idempotent.
