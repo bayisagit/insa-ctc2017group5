@@ -1,354 +1,145 @@
-# 🍽️ ChopChop: Restaurant Food Ordering Application
+🍽️ Restaurant Delivery Web Application
+📌 Project Overview
+The Restaurant Delivery Web Application is a full-stack food ordering platform designed to connect customers with nearby restaurants. Built with Next.js, Prisma, and PostgreSQL, the system offers dedicated dashboards for Admins, Restaurant Owners, and Customers, allowing smooth management of users, menus, and orders.
 
-**ChopChop** is a full-stack food ordering platform designed for seamless restaurant operations and fast delivery. Built with **Next.js 14**, **Tailwind CSS**, **Express.js**, and integrated with **Shipday** for efficient delivery management, ChopChop enables customers to browse menus, place orders, pay securely, and track deliveries in real-time. Restaurants manage menus and orders, while admins oversee operations.
+The platform is optimized for performance, scalability, and user experience with modern web technologies.
 
----
+🧰 Tech Stack
+Layer	Technology
+Frontend	Next.js (React), Tailwind CSS
+Backend	Next.js API Routes, Prisma ORM
+Database	PostgreSQL
+Auth	NextAuth.js (JWT-based)
+Deployment	Vercel (recommended)
+Tooling	ESLint, Prettier, TypeScript
 
-## 📚 Table of Contents
+🗂️ Project Structure
+bash
+Copy
+Edit
+/restaurant-delivery-app
+│
+├── app/                # Application routes
+│   ├── api/            # Backend API routes
+│   ├── admin/          # Admin dashboard
+│   ├── restaurant/     # Restaurant owner dashboard
+│   ├── customer/       # Customer dashboard
+│   ├── auth/           # Authentication routes
+│   ├── globals.css     # Global Tailwind CSS
+│   ├── layout.tsx      # Root layout
+│   └── page.tsx        # Landing page
+│
+├── components/         # Reusable components
+├── lib/                # Utilities and Prisma client
+├── prisma/             # Prisma schema and migrations
+├── public/             # Static assets (images, fonts)
+├── styles/             # Optional custom styles
+├── package.json        # Project dependencies
+├── tailwind.config.js  # Tailwind configuration
+├── tsconfig.json       # TypeScript configuration
+└── README.md           # Project documentation
+✨ Key Features
+🔒 Authentication
+Role-based login/signup: Admin, Restaurant Owner, and Customer
 
-* [Features](#features)
-* [Tech Stack](#tech-stack)
-* [Architecture](#architecture)
-* [Prerequisites](#prerequisites)
-* [Installation](#installation)
-* [Configuration](#configuration)
-* [Running the Application](#running-the-application)
-* [Usage](#usage)
+Secured with NextAuth.js (JWT)
 
-  * [Customer Flow](#customer-flow)
-  * [Restaurant Flow](#restaurant-flow)
-  * [Admin Flow](#admin-flow)
-* [Shipday Integration](#shipday-integration)
-* [API Endpoints](#api-endpoints)
-* [Deployment](#deployment)
-* [Contributing](#contributing)
-* [License](#license)
+📊 Admin Dashboard
+Manage users and restaurants
 
----
+Review and moderate menus
 
-## ✨ Features
+Track all orders
 
-### Customer Features:
+View platform-wide analytics
 
-* Browse restaurants and menus with responsive UI.
-* Add items to cart, calculate totals, and pay via **Stripe**.
-* Real-time order tracking with **Shipday** integration.
-* User authentication (email, Google) via **NextAuth.js**.
+🏪 Restaurant Owner Dashboard
+Create and manage menu items
 
-### Restaurant Features:
+Accept and update orders (Preparing → Ready → Delivered)
 
-* Manage menus (add/edit items) via a dashboard.
-* View and update order statuses (e.g., preparing, shipped).
+Manage tables for reservations
 
-### Admin Features:
+Analyze performance metrics
 
-* Oversee all restaurants, orders, and users.
-* Monitor delivery performance via **Shipday** analytics.
+👨‍🍳 Customer Dashboard
+Browse restaurants and menus
 
-### Delivery:
+Place orders (Delivery/Pickup)
 
-* Fast delivery via Shipday’s AI-powered dispatch and tracking.
-* Supports in-house and third-party drivers (US, Canada, Australia).
+View order history and track order status
 
-### UI & Performance:
+Submit reviews and manage profile
 
-* Responsive Design: Mobile-friendly interface using Tailwind CSS.
-* Scalability: PostgreSQL for robust data management.
+🌐 General Features
+Real-time order updates (polling/WebSockets)
 
----
+Fully responsive UI (Tailwind CSS)
 
-## 🛠 Tech Stack
+Advanced restaurant/menu filtering
 
-| Layer       | Technology                          |
-| ----------- | ----------------------------------- |
-| Frontend    | Next.js 14, Tailwind CSS, shadcn/ui |
-| Backend     | Express.js (Node.js), REST API      |
-| Database    | PostgreSQL via Prisma ORM           |
-| Auth        | NextAuth.js (Email, Google)         |
-| Payment     | Stripe                              |
-| Delivery    | Shipday API                         |
-| State Mgmt  | Zustand                             |
-| HTTP Client | Axios                               |
-| Deployment  | Vercel (Frontend), Render (Backend) |
+Stripe payment integration (mocked for hackathon)
 
----
+Optional Email/SMS notifications
 
-## 🧱 Architecture
+🗃️ Database Overview (Prisma)
+The database schema is designed to clearly define roles and relationships between users, restaurants, orders, and menus.
 
-**Client-Server Architecture** with modular design.
+📌 Core Models Overview
+Model	Description
+User	Represents all users with a role (Admin, Restaurant, Customer)
+Customer	Links to User, holds address, phone, and orders
+Restaurant	Links to User, contains restaurant info and menus
+Menu	Items offered by a restaurant (name, price, image)
+Order	Customer's order with status (Pending → Delivered)
+OrderItem	Specific menu items within an order
+Table	Restaurant tables for reservations
+Review	Customer feedback with ratings and comments
 
-### Frontend (Next.js):
+Enum Types like Role, OrderStatus, and TableStatus help manage user roles and state transitions.
 
-* App Router with SSR for SEO and performance.
-* Components: `Home`, `Restaurant`, `Cart`, `OrderTracking`, `RestaurantDashboard`, `AdminDashboard`.
-* Styling: Tailwind CSS and shadcn/ui.
+🚀 Getting Started
+Follow the steps below to set up and run the project locally:
 
-### Backend (Express.js):
+Clone the Repository
 
-* RESTful API for managing restaurants, menus, orders, and users.
-* Shipday API calls for delivery management.
-
-### Database (PostgreSQL):
-
-* Schema includes: `Users`, `Restaurants`, `Menus`, `Orders`, `Drivers`.
-
-### External Services:
-
-* Stripe for payments.
-* NextAuth.js for authentication.
-* Shipday for delivery dispatch & tracking.
-
----
-
-## 📦 Prerequisites
-
-* Node.js: v18+
-* PostgreSQL: v14+
-* Shipday Account: [shipday.com](https://www.shipday.com)
-* Stripe Account: [stripe.com](https://stripe.com)
-* Vercel & Render Accounts for deployment
-
----
-
-## 📥 Installation
-
-### 1. Clone the Repository:
-
-```bash
+bash
+Copy
+Edit
 git clone https://github.com/bayisagit/insa-ctc2017group5.git
-cd chopchop
-```
+cd insa-ctc2017group5
+Install Dependencies
 
-### 2. Install Frontend:
-
-```bash
-cd frontend
+bash
+Copy
+Edit
 npm install
-```
+Configure Environment
 
-### 3. Install Backend:
+Create a .env file based on .env.example
 
-```bash
-cd backend
-npm install
-```
+Add your PostgreSQL, NextAuth, and Stripe credentials
 
-### 4. Setup Database:
+Set Up the Database
 
-* Install PostgreSQL.
-* Create a database named `chopchop`.
-* Update `backend/prisma/schema.prisma`:
-
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
-
-* Run migrations:
-
-```bash
+bash
+Copy
+Edit
 npx prisma migrate dev --name init
-```
+Run the App
 
----
-
-## ⚙️ Configuration
-
-### Frontend (`frontend/.env.local`):
-
-```
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_nextauth_secret
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-STRIPE_PUBLIC_KEY=your_stripe_public_key
-```
-
-### Backend (`backend/.env`):
-
-```
-DATABASE_URL=postgresql://user:password@localhost:5432/chopchop
-SHIPDAY_API_KEY=your_shipday_api_key
-STRIPE_SECRET_KEY=your_stripe_secret_key
-PORT=5000
-```
-
-### Tailwind Config (`frontend/tailwind.config.js`):
-
-```js
-module.exports = {
-  content: ["./app/**/*.{js,ts,jsx,tsx}", "./components/**/*.{js,ts,jsx,tsx}"],
-  theme: { extend: {} },
-  plugins: [],
-};
-```
-
-### Shipday API Test:
-
-```bash
-curl -H "Authorization: Bearer YOUR_SHIPDAY_API_KEY" https://api.shipday.com/orders
-```
-
----
-
-## ▶️ Running the Application
-
-### Backend:
-
-```bash
-cd backend
+bash
+Copy
+Edit
 npm run dev
-# Runs on http://localhost:5000
-```
+Visit
 
-### Frontend:
+http://localhost:3000 to see the app in action
 
-```bash
-cd frontend
-npm run dev
-# Runs on http://localhost:3000
-```
+📎 Notes
 
-### Seed Database:
+Real-time updates can be improved using tools like Socket.IO or Ably for production.
 
-```bash
-npx prisma db seed
-```
+📫 Contact
+For questions or contributions, feel free to open an issue or contact the dev team.
 
----
-
-## 🧭 Usage
-
-### Customer Flow
-
-* **Browse**: View restaurants at `localhost:3000`
-* **Order**: Add to cart and checkout
-* **Pay**: Stripe payment gateway
-* **Track**: Shipday tracking link via UI
-
-### Restaurant Flow
-
-* **Login**: `localhost:3000/restaurant/dashboard`
-* **Manage Menu**: Add/edit items
-* **Process Orders**: Update statuses (e.g., Preparing, Ready)
-
-### Admin Flow
-
-* **Login**: `localhost:3000/admin`
-* **Monitor**: View all restaurants and orders
-* **Analytics**: Use Shipday insights
-
----
-
-## 🚚 Shipday Integration
-
-### Order Dispatch:
-
-```js
-const axios = require('axios');
-await axios.post('https://api.shipday.com/orders', {
-  orderId: order.id,
-  customer: {
-    name: user.name,
-    address: user.address,
-    phone: user.phone,
-  },
-  restaurant: {
-    name: 'ChopChop',
-    address: restaurant.address,
-  },
-}, {
-  headers: { Authorization: `Bearer ${process.env.SHIPDAY_API_KEY}` },
-});
-```
-
-### Tracking:
-
-```js
-const tracking = await axios.get(`https://api.shipday.com/orders/${orderId}`, {
-  headers: { Authorization: `Bearer ${process.env.SHIPDAY_API_KEY}` },
-});
-```
-
-Display tracking map on the order detail page.
-
----
-
-## 🔌 API Endpoints
-
-### Restaurants:
-
-* `GET /api/restaurants`
-* `POST /api/restaurants` (Admin)
-
-### Menus:
-
-* `GET /api/menus/:restaurantId`
-* `POST /api/menus` (Restaurant role)
-
-### Orders:
-
-* `POST /api/orders`
-* `GET /api/orders/:id`
-
-### Users:
-
-* `GET /api/users/me`
-
-### Shipday API:
-
-* `POST /orders`: Dispatch order
-* `GET /orders/:id`: Tracking
-
----
-
-## 🚀 Deployment
-
-### Frontend (Vercel):
-
-```bash
-cd frontend
-vercel --prod
-```
-
-* Set environment variables in Vercel dashboard.
-
-### Backend (Render):
-
-* Push to GitHub.
-* Deploy on Render.
-* Set environment variables in Render dashboard.
-
-### Database:
-
-* Use a managed PostgreSQL (Neon, Render, etc.)
-* Update `DATABASE_URL`
-
-### Post-Deployment:
-
-* Test Shipday delivery dispatch
-* Test Stripe payments
-* Check responsive UI
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a branch: `git checkout -b feature/xyz`
-3. Commit changes: `git commit -m "Add feature xyz"`
-4. Push to GitHub: `git push origin feature/xyz`
-5. Open a pull request
-
----
-
-## 📄 License
-
-MIT License. See `LICENSE` file for details.
-
----
-
-### Made with ❤️ by Insa and the ChopChop Team
