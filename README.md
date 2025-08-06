@@ -18,6 +18,7 @@ bash
 Copy
 Edit
 /restaurant-delivery-app
+
 │
 ├── app/                # Application routes
 │   ├── api/            # Backend API routes
@@ -29,6 +30,7 @@ Edit
 │   ├── layout.tsx      # Root layout
 │   └── page.tsx        # Landing page
 │
+
 ├── components/         # Reusable components
 ├── lib/                # Utilities and Prisma client
 ├── prisma/             # Prisma schema and migrations
@@ -38,6 +40,8 @@ Edit
 ├── tailwind.config.js  # Tailwind configuration
 ├── tsconfig.json       # TypeScript configuration
 └── README.md           # Project documentation
+
+
 ✨ Key Features
 🔒 Authentication
 Role-based login/signup: Admin, Restaurant Owner, and Customer
