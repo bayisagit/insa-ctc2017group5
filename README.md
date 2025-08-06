@@ -21,24 +21,39 @@ Edit
 
 │
 ├── app/                # Application routes
+
 │   ├── api/            # Backend API routes
+
 │   ├── admin/          # Admin dashboard
+
 │   ├── restaurant/     # Restaurant owner dashboard
+
 │   ├── customer/       # Customer dashboard
+
 │   ├── auth/           # Authentication routes
+
 │   ├── globals.css     # Global Tailwind CSS
+
 │   ├── layout.tsx      # Root layout
+
 │   └── page.tsx        # Landing page
-│
 
 ├── components/         # Reusable components
+
 ├── lib/                # Utilities and Prisma client
+
 ├── prisma/             # Prisma schema and migrations
+
 ├── public/             # Static assets (images, fonts)
+
 ├── styles/             # Optional custom styles
+
 ├── package.json        # Project dependencies
+
 ├── tailwind.config.js  # Tailwind configuration
+
 ├── tsconfig.json       # TypeScript configuration
+
 └── README.md           # Project documentation
 
 
