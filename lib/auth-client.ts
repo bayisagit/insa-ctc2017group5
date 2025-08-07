@@ -5,4 +5,4 @@ export const authClient = createAuthClient({
 })
 
 
-export const {}=authClient;
+export const {signUp}=authClient;
