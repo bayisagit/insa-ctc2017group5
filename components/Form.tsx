@@ -1,16 +1,16 @@
 "use client"
 
-import React, { FormEvent, useState } from 'react'
+import React, { FormEvent, useState, useTransition } from 'react'
 import { Label } from './ui/label'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { signUp } from '@/lib/auth-client'
+import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
+import { GithubIcon } from 'lucide-react'
 
 const Form = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [isGithubPending, startGithubTransition] = useTransition()
 
   const validatePassword = (password: string) => {
     const minLength = 8
@@ -18,6 +18,25 @@ const Form = () => {
     const hasNumber = /\d/.test(password)
     return password.length >= minLength && hasLetter && hasNumber
   }
+
+const signInWithGithub = async () => {
+  startGithubTransition(async () => {
+    await authClient.signIn.social({
+      provider: "github",
+      callbackURL: '/dashboard',
+      fetchOptions: {
+        onSuccess: () => {
+          toast.success("Signed In successfully");
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+        onResponse: () => {}
+      },
+    });
+  });
+};
+
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -42,7 +61,7 @@ const Form = () => {
     }
 
     try {
-      await signUp.email({
+      await authClient.signUp.email({
         email,
         password,
         name
@@ -73,6 +92,7 @@ const Form = () => {
   }
 
   return (
+    <div>
     <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
       <h1 className="text-xl font-bold text-center">
         Welcome to Chopi Chopi App
@@ -121,8 +141,13 @@ const Form = () => {
       <Button type='submit' disabled={isLoading} className="w-full">
         {isLoading ? 'Creating account...' : 'Submit'}
       </Button>
-    </form>
-  )
-}
+      </form>
+       <Button onClick={signInWithGithub} disabled={isGithubPending} className='w-full cursor-pointer mt-3'>
+        <GithubIcon className='size-4 '/>Continue with Github 
+        </Button>
 
-export default Form
+    </div>
+
+  )}
+
+  export default Form
