@@ -75,7 +75,8 @@ const Form = () => {
       await authClient.signUp.email({
         email,
         password,
-        name
+        name,
+         callbackURL: "/login"
       }, {
         onRequest: () => { toast.loading('Creating account...'); },
         onResponse: () =>{ toast.dismiss()},

@@ -71,7 +71,7 @@ const LoginForm = () => {
 
     try {
       await authClient.signIn.email(
-        { email, password },
+        { email, password , callbackURL: "/dashboard"},
         {
           onRequest: () => {toast.loading('Signing in...')},
           onResponse: () => {toast.dismiss()},
