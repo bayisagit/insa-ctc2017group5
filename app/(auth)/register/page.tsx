@@ -173,7 +173,7 @@ const Form = () => {
           variant="outline"
           className="w-full flex items-center justify-center gap-2 cursor-pointer"
         >
-          <GithubIcon className="size-5 text-blue-800" />
+          <GithubIcon className="size-5  text-blue-800 " />
           Continue with GitHub
         </Button>
      
