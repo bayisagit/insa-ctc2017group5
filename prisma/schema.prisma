@@ -54,24 +54,25 @@ model User {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   email         String      @unique
-  password      String
+  password      String      @default("mekin1234")
   name          String
   phone         String?     @unique
   emailVerified Boolean     @default(false)
   image         String?     // Cloudinary URL
   imgPublicId   String?     // Cloudinary asset ID
-  role          Role        
-  addresses     Address[]   
+  role          Role        @default(CUSTOMER) 
+  addressId      String     @unique  
+  addresses     Address?    @relation(name:"UserToAddress",fields: [addressId],references: [id])
   orders        Order[]     
   reviews       Review[]    
   sessions      Session[]
   accounts      Account[]
-  cart          Cart?       @relation(name: "CartToUser")
+  cart          Cart?      @relation(name: "CartToUser")
   notifications Notification[] 
-  restaurant    Restaurant? @relation(fields: [restaurantId], references: [id])
+  restaurant    Restaurant[]
   restaurantId  String?
   driver        Driver?     @relation(name:"DriverToUser")
-  driverId      String?
+  // driverId      String?
   @@map("users")
 }
 
@@ -130,7 +131,7 @@ model Address {
   longitude    Float
   isPrimary    Boolean      @default(false)
   userId       String?
-  user         User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user         User?        @relation(name:"UserToAddress")
   restaurantId String?
   restaurant   Restaurant?  @relation(name:"RestaurantToAdress")
   orders       Order[]      
