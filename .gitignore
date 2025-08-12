@@ -43,11 +43,4 @@ next-env.d.ts
 # prisma
 /lib/generated
 /lib/generated/prisma
-
-/lib/generated/prisma
-
-/lib/generated/prisma
-
-/lib/generated/prisma
-
-/lib/generated/prisma
+/prisma/mekin.db
