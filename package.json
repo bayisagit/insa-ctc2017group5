@@ -1,16 +1,18 @@
 {
   "name": "insa-ctc2017group5",
   "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "prisma generate &&next dev ",
-    "build": "prisna generate && next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "prisma": {
-    "seed": "prisma/seed.ts"
-  },
+  "private": true,"scripts": {
+  "dev": "next dev",
+  "build": "prisma generate && next build",
+  "start": "next start",
+  "lint": "next lint"
+}
+,
+"prisma": {
+  "schema": "prisma/schema.prisma",
+  "seed": "prisma/seed.ts"
+}
+,
   "dependencies": {
     "@prisma/client": "^6.13.0",
     "@radix-ui/react-label": "^2.1.7",
