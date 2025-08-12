@@ -1,164 +1,354 @@
-🍽️ Restaurant Delivery Web Application
-📌 Project Overview
-The Restaurant Delivery Web Application is a full-stack food ordering platform designed to connect customers with nearby restaurants. Built with Next.js, Prisma, and PostgreSQL, the system offers dedicated dashboards for Admins, Restaurant Owners, and Customers, allowing smooth management of users, menus, and orders.
-
-The platform is optimized for performance, scalability, and user experience with modern web technologies.
-
-🧰 Tech Stack
-Layer	Technology
-Frontend	Next.js (React), Tailwind CSS
-Backend	Next.js API Routes, Prisma ORM
-Database	PostgreSQL
-Auth	NextAuth.js (JWT-based)
-Deployment	Vercel (recommended)
-Tooling	ESLint, Prettier, TypeScript
-
-🗂️ Project Structure
-bash
-Copy
-Edit
-/restaurant-delivery-app
-
-│
-├── app/                # Application routes
-
-│   ├── api/            # Backend API routes
-
-│   ├── admin/          # Admin dashboard
-
-│   ├── restaurant/     # Restaurant owner dashboard
-
-│   ├── customer/       # Customer dashboard
-
-│   ├── auth/           # Authentication routes
-
-│   ├── globals.css     # Global Tailwind CSS
-
-│   ├── layout.tsx      # Root layout
-
-│   └── page.tsx        # Landing page
-
-├── components/         # Reusable components
-
-├── lib/                # Utilities and Prisma client
-
-├── prisma/             # Prisma schema and migrations
-
-├── public/             # Static assets (images, fonts)
-
-├── styles/             # Optional custom styles
-
-├── package.json        # Project dependencies
-
-├── tailwind.config.js  # Tailwind configuration
-
-├── tsconfig.json       # TypeScript configuration
-
-└── README.md           # Project documentation
 
 
-✨ Key Features
-🔒 Authentication
-Role-based login/signup: Admin, Restaurant Owner, and Customer
+# 🚀 Food Delivery App Implementation Guide (Next.js + Better Auth)
 
-Secured with NextAuth.js (JWT)
+## 🟢 Step 1: Next.js Initial Setup
 
-📊 Admin Dashboard
-Manage users and restaurants
+1. **Create Next.js Project**
 
-Review and moderate menus
+   ```bash
+   npx create-next-app@latest food-delivery
+   cd food-delivery
+   ```
 
-Track all orders
+2. **Clean up default files**
 
-View platform-wide analytics
+   * Remove all files in `public/*`
+   * Clear contents of `globals.css`
+   * Clear contents of `app/page.tsx`
 
-🏪 Restaurant Owner Dashboard
-Create and manage menu items
+3. **Install & Configure shadcn/ui**
 
-Accept and update orders (Preparing → Ready → Delivered)
+   ```bash
+   npx shadcn@latest init
+   npx shadcn@latest add button label input sonner
+   ```
 
-Manage tables for reservations
+4. **Test the Setup**
 
-Analyze performance metrics
+   * Add a simple `<Button />` to `page.tsx`
+   * Start the server:
 
-👨‍🍳 Customer Dashboard
-Browse restaurants and menus
+     ```bash
+     npm run dev
+     ```
+   * Verify it works.
 
-Place orders (Delivery/Pickup)
+---
 
-View order history and track order status
+## 🟢 Step 2: Authentication Setup with Better Auth
 
-Submit reviews and manage profile
+### 2.1 Install Dependencies
 
-🌐 General Features
-Real-time order updates (polling/WebSockets)
+```bash
+npm install better-auth
+npm install prisma --save-dev
+```
 
-Fully responsive UI (Tailwind CSS)
+---
 
-Advanced restaurant/menu filtering
+### 2.2 Configure Environment
 
-Stripe payment integration (mocked for hackathon)
+1. Create `.env` file at project root:
 
-Optional Email/SMS notifications
+   ```env
+   BETTER_AUTH_SECRET=your-secret-key
+   BETTER_AUTH_URL=http://localhost:3000
+   DATABASE_URL=your-database-url
+   ```
+2. Use **Neon.tech** or any PostgreSQL provider for hosting your database.
 
-🗃️ Database Overview (Prisma)
-The database schema is designed to clearly define roles and relationships between users, restaurants, orders, and menus.
+---
 
-📌 Core Models Overview
-Model	Description
-User	Represents all users with a role (Admin, Restaurant, Customer)
-Customer	Links to User, holds address, phone, and orders
-Restaurant	Links to User, contains restaurant info and menus
-Menu	Items offered by a restaurant (name, price, image)
-Order	Customer's order with status (Pending → Delivered)
-OrderItem	Specific menu items within an order
-Table	Restaurant tables for reservations
-Review	Customer feedback with ratings and comments
+### 2.3 Create Better Auth Instance
 
-Enum Types like Role, OrderStatus, and TableStatus help manage user roles and state transitions.
+Create `lib/auth.ts`:
 
-🚀 Getting Started
-Follow the steps below to set up and run the project locally:
+```ts
+import { betterAuth } from "better-auth";
 
-Clone the Repository
+export const auth = betterAuth({
+  emailAndPassword: { enabled: true },
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }
+  }
+});
+```
 
-bash
-Copy
-Edit
-git clone https://github.com/bayisagit/insa-ctc2017group5.git
-cd insa-ctc2017group5
-Install Dependencies
+---
 
-bash
-Copy
-Edit
-npm install
-Configure Environment
+### 2.4 Configure Database for Better Auth
 
-Create a .env file based on .env.example
+You can use **SQLite** or **PostgreSQL** with Prisma.
 
-Add your PostgreSQL, NextAuth, and Stripe credentials
+#### Example with Prisma:
 
-Set Up the Database
+* Install and initialize Prisma:
 
-bash
-Copy
-Edit
-npx prisma migrate dev --name init
-Run the App
+  ```bash
+  npx prisma init
+  ```
+* Update `schema.prisma` with `User`, `Session`, `Account`, `Verification` models (generated later).
+* Generate auth tables:
 
-bash
-Copy
-Edit
-npm run dev
-Visit
+  ```bash
+  npx @better-auth/cli generate --output=auth.schema.prisma
+  ```
+* Push changes:
 
-http://localhost:3000 to see the app in action
+  ```bash
+  npx prisma db push
+  ```
 
-📎 Notes
+---
 
-Real-time updates can be improved using tools like Socket.IO or Ably for production.
+### 2.5 Mount the Auth API
 
-📫 Contact
-For questions or contributions, feel free to open an issue or contact the dev team.
+Create `app/api/auth/[...all]/route.ts`:
 
+```ts
+import { auth } from "@/lib/auth";
+import { toNextJsHandler } from "better-auth/next-js";
+
+export const { GET, POST } = toNextJsHandler(auth);
+```
+
+---
+
+### 2.6 Create Client Instance
+
+Create `lib/auth-client.ts`:
+
+```ts
+import { createAuthClient } from "better-auth/react";
+
+export const authClient = createAuthClient({
+  baseURL: "http://localhost:3000"
+});
+
+export const { signIn, signUp, useSession } = authClient;
+```
+
+✅ **Your app is now ready to handle authentication!**
+
+---
+
+## 🟢 Step 3: User Authentication (Forms & Flows)
+
+1. **Email & Password Authentication**
+
+   * Enable `emailAndPassword` in `auth.ts`
+   * Create `components/register-form.tsx` and `components/login-form.tsx`
+   * Implement validation & handle sign-up/sign-in flows
+
+2. **Session Management**
+
+   * Display user session on a profile page
+   * Implement sign-out functionality
+
+3. **Unauthorized Access Handling**
+
+   * Redirect unauthenticated users
+   * Show appropriate error messages
+
+---
+
+## 🟢 Step 4: Advanced Authentication Features
+
+1. Configure:
+
+   * `autoSignIn`
+   * `advanced.database.generateId`
+   * Argon2 password hashing (`emailAndPassword.password`)
+
+2. Use **Server Actions** for:
+
+   * Signing up
+   * Signing in
+   * Cookie management
+
+3. Integrate **Next.js cookies plugin**
+
+---
+
+## 🟢 Step 5: Session Management
+
+1. Implement `useSession` hook in components
+2. Configure session expiration
+3. Add middleware for route protection
+4. Enhance error handling & add hooks:
+
+   * Email validation
+   * Name transformation
+
+---
+
+## 🟢 Step 6: Role-Based Access Control (RBAC)
+
+1. Add `UserRole` enum to Prisma
+2. Push database changes
+3. Update user creation flow
+4. Add:
+
+   * Admin Dashboard
+   * Role dropdown for admins
+   * Database hooks for role logic
+
+---
+
+## 🟢 Step 7: OAuth Integration (Optional)
+
+1. Enable Google OAuth
+2. Enable GitHub OAuth
+3. Handle account linking & error pages
+
+---
+
+## 🟢 Step 8: Email Verification & Password Recovery
+
+1. Set up **Nodemailer**
+2. Implement:
+
+   * Email verification flow
+   * Password reset pages
+
+---
+
+## 🟢 Step 9: User Management & Advanced Features
+
+1. Profile update (name, email, password)
+2. Magic link authentication
+3. Custom sessions & cookie caching
+
+---
+
+### ✅ Additional Notes
+
+* Test each section before moving on
+* Truncate the database when experimenting with new configs
+* Pay attention to **TypeScript types**
+* Handle all error states & edge cases
+
+---
+
+🔹 Do you want me to **also rewrite this into a fully copy-paste-ready markdown with commands grouped by phase (Setup → Auth → Features → Deployment)?**
+I can also provide **a folder structure recommendation** for this Next.js + Better Auth project. Shall I proceed?
+
+
+Great question! Understanding the relationship between **Better Auth**, **Prisma**, **PostgreSQL (PSQL)**, and **Neon** is essential for setting up authentication in a Next.js app. Here’s how they are linked:
+
+---
+
+## ✅ **1. Better Auth** – The Authentication Layer
+
+* **What it is**:
+  A lightweight authentication library for Next.js and other frameworks.
+  It manages user sign-up, sign-in, sessions, OAuth, and more.
+
+* **What it does**:
+
+  * Defines how authentication is handled (e.g., email/password, OAuth).
+  * Provides APIs for handling user login/logout.
+  * Needs a database to store user information (users, sessions, tokens, etc.).
+
+* **Dependency**:
+  👉 **Better Auth doesn’t store data itself** – it requires a database connection (via an ORM like Prisma or directly).
+
+---
+
+## ✅ **2. Prisma** – The ORM (Object-Relational Mapper)
+
+* **What it is**:
+  A modern ORM for Node.js/TypeScript that provides an easy way to interact with SQL databases.
+
+* **What it does**:
+
+  * Maps your database tables to TypeScript models.
+  * Allows you to write database queries in a type-safe way.
+  * Works with many SQL databases like PostgreSQL, MySQL, SQLite, etc.
+
+* **Relationship with Better Auth**:
+
+  * **Better Auth can use Prisma as an adapter** to talk to the database.
+  * When using Prisma, Better Auth generates a schema (`auth.schema.prisma`) which defines tables like `User`, `Session`, `Account`, etc.
+  * Prisma manages migrations and ensures the database schema matches what Better Auth needs.
+
+---
+
+## ✅ **3. PostgreSQL (PSQL)** – The Database
+
+* **What it is**:
+  An open-source relational database (SQL-based).
+  It’s where all persistent authentication data is stored.
+
+* **What it stores for Better Auth**:
+
+  * Users (with emails, passwords, roles, etc.)
+  * Sessions (active login sessions)
+  * OAuth accounts (if using Google/GitHub login)
+  * Verification tokens (for email verification, password resets, etc.)
+
+* **Relationship with Prisma & Better Auth**:
+
+  * PostgreSQL is the **physical database**.
+  * Prisma connects to it via the `DATABASE_URL` in `.env`.
+  * Better Auth uses Prisma to interact with PostgreSQL.
+
+---
+
+## ✅ **4. Neon** – PostgreSQL Hosting (Cloud DB)
+
+* **What it is**:
+  A serverless PostgreSQL provider (similar to Supabase, Render, Railway).
+  It hosts PostgreSQL databases in the cloud, so you don’t need to run PostgreSQL locally.
+
+* **What it does**:
+
+  * Provides a hosted PostgreSQL database with a connection URL.
+  * Scales automatically and offers free tiers for development.
+
+* **Relationship with PostgreSQL, Prisma, and Better Auth**:
+
+  * Neon is just the **hosted version of PostgreSQL**.
+  * You’ll use its connection URL as `DATABASE_URL` in `.env`.
+  * Prisma connects to Neon using this URL, and Better Auth uses Prisma to store/fetch authentication data.
+
+---
+
+## 🔗 **How They All Work Together**
+
+Here’s the flow:
+
+```
+Better Auth  →  Prisma (ORM)  →  PostgreSQL (Database)  →  Neon (Hosting)
+```
+
+* **Better Auth** defines authentication logic and expects to read/write user data.
+* **Prisma** is the bridge between your TypeScript/Next.js app and the database.
+* **PostgreSQL** is the database engine where all data is stored.
+* **Neon** is the cloud service where PostgreSQL is hosted.
+
+---
+
+## ✅ Example Connection Flow:
+
+1. You configure `DATABASE_URL` in `.env` with the Neon connection string:
+
+   ```env
+   DATABASE_URL=postgresql://user:password@neon-db-host/dbname?sslmode=require
+   ```
+
+2. Prisma uses this URL to connect to Neon (PostgreSQL).
+
+3. Better Auth uses Prisma to create, read, and update users and sessions.
+
+4. Your app interacts only with **Better Auth** and **Prisma**, not the database directly.
+
+---
+
+### 🔥 **Want me to draw a diagram** showing how these components interact (Better Auth ↔ Prisma ↔ PostgreSQL ↔ Neon)?
+
+I can provide a **visual architecture diagram** to make it crystal clear. Shall I proceed?
