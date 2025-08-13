@@ -30,6 +30,30 @@ const Signup = () => {
    })
 
    const onSubmit= async(data:SignupFormType)=>{
+// const { data: users, error } = await authClient.admin.listUsers({
+//   query: {
+//     searchValue: "Mekin Jemal",
+//     searchField: "name",
+//     searchOperator: "contains",
+//     limit: 100,
+//     offset: 100,
+//     sortBy: "name",
+//     sortDirection: "desc",
+//     filterField: "email",
+//     filterValue: "mekinjemal999@gmail.com",
+//     filterOperator: "eq",
+//   }
+
+// })
+// console.log("Users",users)
+
+const { data: newUser, error } = await authClient.admin.createUser({
+    email: "user@example.com", // required
+    password: "some-secure-password", // required
+    name: "James Smith", // required
+    role: "ADMIN",
+    data: { customField: "customValue" },
+});
       try {
 
       await authClient.signUp.email({

@@ -16,6 +16,7 @@ enum Role {
   CUSTOMER
   STORE_OWNER
   DRIVER
+  // user
 }
 
 enum OrderStatus {
@@ -97,7 +98,7 @@ model User {
   banReason  String?
   banExpires DateTime?
 
-  @@map("user")
+  @@map("users")
 }
 
 model Session {
@@ -115,7 +116,7 @@ model Session {
 
   impersonatedBy String?
 
-  @@map("session")
+  @@map("sessions")
 }
 
 model Account {
@@ -138,7 +139,7 @@ model Account {
   expiresAt             DateTime?
   tokenType             String?
 
-  @@map("account")
+  @@map("accounts")
 }
 
 model Verification {
@@ -149,7 +150,7 @@ model Verification {
   createdAt  DateTime?
   updatedAt  DateTime?
 
-  @@map("verification")
+  @@map("verifications")
 }
 
 model VerificationToken {
