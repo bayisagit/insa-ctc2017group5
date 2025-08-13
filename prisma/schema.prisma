@@ -11,7 +11,6 @@ datasource db {
   url      = "file:./mekin.db"
 }
 
-/* ========= ENUMS ========= */
 enum Role {
   ADMIN
   CUSTOMER
@@ -67,31 +66,32 @@ enum ProductType {
   OTHER
 }
 
-/* ========= MODELS ========= */
-
 model User {
-  id            String    @id
+  id            String         @id
   name          String
-  email         String    @unique
+  email         String         @unique
   emailVerified Boolean
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
-  phone         String?   @unique
+  phone         String?        @unique
   imgPublicId   String?
-  role          Role      @default(CUSTOMER)
-  addressId     String?   @unique
-  addresses     Address?  @relation(name:"UserToAddress", fields: [addressId], references: [id])
+  role          Role           @default(CUSTOMER)
+  addressId     String?        @unique
+  addresses     Address?       @relation(name: "UserToAddress", fields: [addressId], references: [id])
   orders        Order[]
   reviews       Review[]
-  cart          Cart?     @relation(name: "CartToUser")
+  cart          Cart?          @relation(name: "CartToUser")
   notifications Notification[]
-  stores       Store[]
-  driver        Driver?   @relation(name:"DriverToUser")
+  stores        Store[]
+  driver        Driver?        @relation(name: "DriverToUser")
   rating        Rating[]
 
-  sessions      Session[]
-  accounts      Account[]
+  sessions Session[]
+  accounts Account[]
+
+  members     Member[]
+  invitations Invitation[]
 
   @@map("user")
 }
@@ -106,6 +106,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  activeOrganizationId String?
 
   @@map("session")
 }
@@ -145,61 +147,61 @@ model Verification {
 }
 
 model VerificationToken {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   identifier String
-  token      String    @unique
+  token      String   @unique
   expiresAt  DateTime
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
   @@map("verification_tokens")
 }
 
 model Address {
-  id           String    @id @default(uuid())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  street       String?
-  city         String?
-  latitude     Float
-  longitude    Float
-  userId       String?
-  user         User?     @relation(name:"UserToAddress")
-  storeId      String?
-  store        Store?    @relation(name:"StoreToAddress")
-  orders       Order[]     
-  
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  street    String?
+  city      String?
+  latitude  Float
+  longitude Float
+  userId    String?
+  user      User?    @relation(name: "UserToAddress")
+  storeId   String?
+  store     Store?   @relation(name: "StoreToAddress")
+  orders    Order[]
+
   @@map("addresses")
 }
 
 model Store {
-  id            String      @id @default(uuid())
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  name          String
-  description   String?
-  phone         String
-  email         String      @unique
-  website       String?
-  logo          String?      
-  banner        String?      
-  logoPublicId  String?      
-  bannerPublicId String?     
-  isApproved    Boolean     @default(false)
-  isActive      Boolean?    @default(true)
-  categories    Category[]
-  products      Product[]   
-  orders        Order[]      
-  openingHours  OpeningHour[]
-  reviews       Review[]     
-  address       Address     @relation(name:"StoreToAddress", fields: [addressId], references: [id])
-  addressId     String      @unique     
-  promotions    Promotion[]  
-  owners        User[]       
-  productTypes  ProductType
-  deliveryZones DeliveryZone[]
-  rating        Rating[]
-  
+  id             String         @id @default(uuid())
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  name           String
+  description    String?
+  phone          String
+  email          String         @unique
+  website        String?
+  logo           String?
+  banner         String?
+  logoPublicId   String?
+  bannerPublicId String?
+  isApproved     Boolean        @default(false)
+  isActive       Boolean?       @default(true)
+  categories     Category[]
+  products       Product[]
+  orders         Order[]
+  openingHours   OpeningHour[]
+  reviews        Review[]
+  address        Address        @relation(name: "StoreToAddress", fields: [addressId], references: [id])
+  addressId      String         @unique
+  promotions     Promotion[]
+  owners         User[]
+  productTypes   ProductType
+  deliveryZones  DeliveryZone[]
+  rating         Rating[]
+
   @@map("stores")
 }
 
@@ -216,178 +218,178 @@ model Category {
   store         Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   position      Int       @default(0)
   isActive      Boolean   @default(true)
-  
+
   @@map("categories")
 }
 
 model Product {
-  id            String         @id @default(uuid())
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id            String           @id @default(uuid())
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
   name          String
   description   String?
-  image         String?         
-  imagePublicId String?        
-  isAvailable   Boolean        @default(true)
-  isFeatured    Boolean        @default(false)
-  orderItems    OrderItem[]     
+  image         String?
+  imagePublicId String?
+  isAvailable   Boolean          @default(true)
+  isFeatured    Boolean          @default(false)
+  orderItems    OrderItem[]
   cartItems     CartItem[]
   categoryId    String
-  category      Category       @relation(fields: [categoryId], references: [id])
+  category      Category         @relation(fields: [categoryId], references: [id])
   storeId       String
-  store         Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  store         Store            @relation(fields: [storeId], references: [id], onDelete: Cascade)
   variants      ProductVariant[]
   productType   ProductType
-  weight        Float?         // in kg
-  dimensions    String?        // "10x10x10 cm"
+  weight        Float? // in kg
+  dimensions    String? // "10x10x10 cm"
   barcode       String?
   sku           String?
-  
+
   @@map("products")
 }
 
 model ProductVariant {
-  id           String      @id @default(uuid())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  name         String      // e.g., "500g", "1kg", "Red", "Blue"
-  price        Float
-  isAvailable  Boolean     @default(true)
-  productId    String
-  product      Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
-  orderItems   OrderItem[]
-  cartItems    CartItem[]
-  
+  id          String      @id @default(uuid())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  name        String // e.g., "500g", "1kg", "Red", "Blue"
+  price       Float
+  isAvailable Boolean     @default(true)
+  productId   String
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+
   @@map("product_variants")
 }
 
 model Order {
-  id                   String       @id @default(uuid())
-  type                 OrderType    @default(DELIVERY)
-  createdAt            DateTime     @default(now())
-  updatedAt            DateTime     @updatedAt
-  orderNumber          String       @unique
-  items                OrderItem[]
-  deliveryFee          Float        @default(0)
-  serviceFee           Float        @default(0)
-  subtotal             Float
-  total                Float
-  status               OrderStatus  @default(PENDING)
-  statusHistory        Json         // Array of status changes with timestamps
-  paymentStatus        PaymentStatus @default(PENDING)
-  paymentMethod        PaymentMethod
+  id                    String        @id @default(uuid())
+  type                  OrderType     @default(DELIVERY)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  orderNumber           String        @unique
+  items                 OrderItem[]
+  deliveryFee           Float         @default(0)
+  serviceFee            Float         @default(0)
+  subtotal              Float
+  total                 Float
+  status                OrderStatus   @default(PENDING)
+  statusHistory         Json // Array of status changes with timestamps
+  paymentStatus         PaymentStatus @default(PENDING)
+  paymentMethod         PaymentMethod
   estimatedDeliveryTime DateTime?
-  reviewId             String?
-  review               Review?      @relation(name:"ReviewToOrder")
-  driverId             String?
-  driver               Driver?      @relation(fields: [driverId], references: [id])
-  deliveryAddressId    String
-  deliveryAddress      Address      @relation(fields: [deliveryAddressId], references: [id])
-  storeId              String
-  store                Store        @relation(fields: [storeId], references: [id])
-  userId               String
-  customer             User         @relation(fields: [userId], references: [id])
-  promotionId          String?
-  promotion            Promotion?   @relation(fields: [promotionId], references: [id])
-  scheduledAt          DateTime?    // For future orders
-  rating               Rating?
-  isScheduled          Boolean      @default(false)
-  payment              Payment?     @relation(name:"PaymentToOrder")
-  
+  reviewId              String?
+  review                Review?       @relation(name: "ReviewToOrder")
+  driverId              String?
+  driver                Driver?       @relation(fields: [driverId], references: [id])
+  deliveryAddressId     String
+  deliveryAddress       Address       @relation(fields: [deliveryAddressId], references: [id])
+  storeId               String
+  store                 Store         @relation(fields: [storeId], references: [id])
+  userId                String
+  customer              User          @relation(fields: [userId], references: [id])
+  promotionId           String?
+  promotion             Promotion?    @relation(fields: [promotionId], references: [id])
+  scheduledAt           DateTime? // For future orders
+  rating                Rating?
+  isScheduled           Boolean       @default(false)
+  payment               Payment?      @relation(name: "PaymentToOrder")
+
   @@map("orders")
 }
 
 model OrderItem {
-  id                  String           @id @default(uuid())
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-  quantity            Int              @default(1)
+  id                  String          @id @default(uuid())
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  quantity            Int             @default(1)
   price               Float
   specialInstructions String?
   orderId             String
-  order               Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order               Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId           String
-  product             Product          @relation(fields: [productId], references: [id])
+  product             Product         @relation(fields: [productId], references: [id])
   variantId           String?
-  variant             ProductVariant?  @relation(fields: [variantId], references: [id])
-  
+  variant             ProductVariant? @relation(fields: [variantId], references: [id])
+
   @@map("order_items")
 }
 
 model Cart {
-  id           String      @id @default(uuid())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  userId       String      @unique
-  user         User        @relation(name: "CartToUser", fields: [userId], references: [id])
-  items        CartItem[]
-  storeId      String?     // To handle multi-store carts if needed
-  
+  id        String     @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  userId    String     @unique
+  user      User       @relation(name: "CartToUser", fields: [userId], references: [id])
+  items     CartItem[]
+  storeId   String? // To handle multi-store carts if needed
+
   @@map("carts")
 }
 
 model CartItem {
-  id                  String           @id @default(uuid())
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-  quantity            Int              @default(1)
+  id                  String          @id @default(uuid())
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  quantity            Int             @default(1)
   specialInstructions String?
   cartId              String
-  cart                Cart             @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cart                Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
   productId           String
-  product             Product          @relation(fields: [productId], references: [id])
+  product             Product         @relation(fields: [productId], references: [id])
   variantId           String?
-  variant             ProductVariant?  @relation(fields: [variantId], references: [id])
-  
+  variant             ProductVariant? @relation(fields: [variantId], references: [id])
+
   @@map("cart_items")
 }
 
 model Driver {
-  id                   String      @id @default(uuid())
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @updatedAt
-  userId               String      @unique
-  user                 User        @relation(name:"DriverToUser", fields: [userId], references: [id], onDelete: Cascade)
-  licenseNumber        String
-  vehicleType          VehicleType
-  vehicleMake          String
-  vehicleModel         String
-  vehicleYear          Int
-  licensePlate         String
-  isAvailable          Boolean     @default(true)
-  isVerified           Boolean     @default(false)
-  currentLat           Float?
-  currentLng           Float?
-  orders               Order[]
-  documents            DriverDocument[]
-  rating               Rating[]
-  
+  id            String           @id @default(uuid())
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  userId        String           @unique
+  user          User             @relation(name: "DriverToUser", fields: [userId], references: [id], onDelete: Cascade)
+  licenseNumber String
+  vehicleType   VehicleType
+  vehicleMake   String
+  vehicleModel  String
+  vehicleYear   Int
+  licensePlate  String
+  isAvailable   Boolean          @default(true)
+  isVerified    Boolean          @default(false)
+  currentLat    Float?
+  currentLng    Float?
+  orders        Order[]
+  documents     DriverDocument[]
+  rating        Rating[]
+
   @@map("drivers")
 }
 
 model DriverDocument {
   id          String    @id @default(uuid())
-  type        String    // 'license', 'insurance', 'registration'
+  type        String // 'license', 'insurance', 'registration'
   documentUrl String
   expiryDate  DateTime?
   isVerified  Boolean   @default(false)
   driverId    String
   driver      Driver    @relation(fields: [driverId], references: [id], onDelete: Cascade)
-  
+
   @@map("driver_documents")
 }
 
 model OpeningHour {
-  id           String    @id @default(uuid())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  dayOfWeek    Int       // 0-6 (Sunday-Saturday)
-  openingTime  String    // "09:00"
-  closingTime  String    // "17:00"
-  isClosed     Boolean   @default(false)
-  storeId      String
-  store        Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  
+  id          String   @id @default(uuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  dayOfWeek   Int // 0-6 (Sunday-Saturday)
+  openingTime String // "09:00"
+  closingTime String // "17:00"
+  isClosed    Boolean  @default(false)
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
   @@map("opening_hours")
 }
 
@@ -395,101 +397,141 @@ model Review {
   id            String    @id @default(uuid())
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  rating        Int       
+  rating        Int
   comment       String?
   reply         String?
   repliedAt     DateTime?
   orderId       String    @unique
-  order         Order     @relation(name:"ReviewToOrder", fields: [orderId], references: [id])
+  order         Order     @relation(name: "ReviewToOrder", fields: [orderId], references: [id])
   userId        String
   customer      User      @relation(fields: [userId], references: [id])
   storeId       String
   store         Store     @relation(fields: [storeId], references: [id])
   driverRating  Int?
   driverComment String?
-  
+
   @@map("reviews")
 }
 
 model Promotion {
-  id           String    @id @default(uuid())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  code         String    @unique
-  description  String?
-  discountType String    // 'PERCENTAGE', 'FIXED', 'FREE_DELIVERY'
+  id            String   @id @default(uuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  code          String   @unique
+  description   String?
+  discountType  String // 'PERCENTAGE', 'FIXED', 'FREE_DELIVERY'
   discountValue Float
-  minOrder     Float?
-  startDate    DateTime
-  endDate      DateTime
-  isActive     Boolean   @default(true)
-  usageLimit   Int?
-  timesUsed    Int       @default(0)
-  storeId      String?
-  store        Store?    @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  orders       Order[]
-  isPublic     Boolean   @default(true)
-  
+  minOrder      Float?
+  startDate     DateTime
+  endDate       DateTime
+  isActive      Boolean  @default(true)
+  usageLimit    Int?
+  timesUsed     Int      @default(0)
+  storeId       String?
+  store         Store?   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  orders        Order[]
+  isPublic      Boolean  @default(true)
+
   @@map("promotions")
 }
 
 model Notification {
-  id           String    @id @default(uuid())
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  title        String
-  message      String
-  type         String    // 'ORDER_UPDATE', 'PROMOTION', 'SYSTEM'
-  isRead       Boolean   @default(false)
-  readAt       DateTime?
-  metadata     Json?     // Additional data like orderId, etc.
-  userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  title     String
+  message   String
+  type      String // 'ORDER_UPDATE', 'PROMOTION', 'SYSTEM'
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  metadata  Json? // Additional data like orderId, etc.
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("notifications")
 }
 
 model Rating {
-  id              String     @id @default(uuid())
-  orderScore      Int?     
-  storeScore      Int?     
-  driverScore     Int?     
-  comment         String?  
-  createdAt       DateTime   @default(now())
-  orderId         String     @unique
-  order           Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  userId          String?
-  user            User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  storeId         String?
-  store           Store?     @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  driverId        String?
-  driver          Driver?    @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  id          String   @id @default(uuid())
+  orderScore  Int?
+  storeScore  Int?
+  driverScore Int?
+  comment     String?
+  createdAt   DateTime @default(now())
+  orderId     String   @unique
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storeId     String?
+  store       Store?   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  driverId    String?
+  driver      Driver?  @relation(fields: [driverId], references: [id], onDelete: Cascade)
 }
 
 model Payment {
-  id             String         @id @default(uuid())
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  orderId        String         @unique
-  order          Order          @relation(name:"PaymentToOrder",fields: [orderId], references: [id])
-  amount         Float
-  method         PaymentMethod
-  status         PaymentStatus
-  transactionId  String?
-  provider       String?        // Stripe, PayPal, etc.
-  
+  id            String        @id @default(uuid())
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  orderId       String        @unique
+  order         Order         @relation(name: "PaymentToOrder", fields: [orderId], references: [id])
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus
+  transactionId String?
+  provider      String? // Stripe, PayPal, etc.
+
   @@map("payments")
 }
 
 model DeliveryZone {
-  id           String    @id @default(uuid())
-  name         String
-  radius       Float     // in miles/kilometers
-  deliveryFee  Float
-  minOrder     Float?
-  storeId      String
-  store        Store     @relation(fields: [storeId], references: [id])
-  polygon      Json?     // GeoJSON coordinates for custom zones
-  
+  id          String @id @default(uuid())
+  name        String
+  radius      Float // in miles/kilometers
+  deliveryFee Float
+  minOrder    Float?
+  storeId     String
+  store       Store  @relation(fields: [storeId], references: [id])
+  polygon     Json? // GeoJSON coordinates for custom zones
+
   @@map("delivery_zones")
+}
+
+model Organization {
+  id          String       @id
+  name        String
+  slug        String?
+  logo        String?
+  createdAt   DateTime
+  metadata    String?
+  members     Member[]
+  invitations Invitation[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+  createdAt      DateTime
+
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@map("invitation")
 }
