@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { PrismaClient } from "./generated/prisma";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { organization } from "better-auth/plugins"
+import { admin, organization } from "better-auth/plugins"
 const prisma = new PrismaClient();
  
 export const auth = betterAuth({
@@ -9,7 +9,8 @@ export const auth = betterAuth({
    provider: "sqlite",
   }),
       plugins: [ 
-        organization() 
+        organization() ,
+        admin() 
     ],
 
   emailAndPassword: {

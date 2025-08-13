@@ -29,6 +29,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { authClient } from "@/lib/auth-client"
 
 export function NavUser({
   user,
@@ -40,6 +41,9 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+    const logout=async()=>{
+      await authClient.signOut()
+    }
 
   return (
     <SidebarMenu>
@@ -102,8 +106,8 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
+            <DropdownMenuItem   className="cursor-pointer">
+              <LogOut  onClick={logout}/>
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

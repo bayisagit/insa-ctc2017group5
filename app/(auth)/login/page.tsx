@@ -4,16 +4,30 @@ import React, { FormEvent, useState, useTransition } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { toast } from 'sonner';
 import { GithubIcon } from 'lucide-react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FaGoogle } from 'react-icons/fa';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { loginFormType, loginSchema } from '@/validation/login.validation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form } from '@/components/ui/form';
+import { InputField } from '@/components/FormFields';
 
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isGithubPending, startGithubTransition] = useTransition();
   const [isGooglePending, startGoogleTransition] = useTransition();
+
+ const form =useForm<loginFormType>({
+  resolver:zodResolver(loginSchema),
+  defaultValues:{
+    email:"",
+    password:""
+
+  }
+ })
+
+
 
   const signInWithGithub = async () => {
     startGithubTransition(async () => {
@@ -55,23 +69,11 @@ const LoginForm = () => {
     });
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get('email')?.toString().trim() || '';
-    const password = formData.get('password')?.toString() || '';
-
-    if (!email || !password) {
-      toast.error('Please fill in all fields');
-      setIsLoading(false);
-      return;
-    }
+  const onSubmit = async (data:loginFormType) => {
 
     try {
       await authClient.signIn.email(
-        { email, password , callbackURL: "/dashboard"},
+        { email:data.email, password:data.password , callbackURL: "/dashboard"},
         {
           onRequest: () => {toast.loading('Signing in...')},
           onResponse: () => {toast.dismiss()},
@@ -88,38 +90,37 @@ const LoginForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-6 bg-gray-50 dark:bg-black transition-colors">
+      <Form {...form}>
       <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white dark:bg-neutral-900 p-6 rounded-xl shadow-xl space-y-2"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full max-w-sm bg-white dark:bg-neutral-900 p-6 rounded-xl  space-y-2"
       >
         <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100">
           Login to Chopi Chopi
         </h1>
-
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
+   <div className="space-y-2">
+          <InputField
+           control={form.control}
             type="email"
+            label='Email'
             name="email"
-            id="email"
             placeholder="Enter your email"
-            required
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
+        <div className="space-y-2 relative">
+          <InputField
+            control={form.control}
             type="password"
             name="password"
-            id="password"
-            placeholder="Your password"
-            required
-            minLength={8}
-          />
-        </div>
+            label='Password'
+            placeholder="At least 8 characters"
+            showPasswordToggle
 
-        <Button type="submit" disabled={isLoading} className="w-full">
+          />
+          </div>
+           
+        <Button type="submit" disabled={isLoading} className="w-full cursor-pointer">
           {isLoading ? 'Logging in...' : 'Login'}
         </Button>
                 <p className="text-sm text-center mt-6 text-gray-600">
@@ -129,15 +130,15 @@ const LoginForm = () => {
           </Link>
         </p>
 
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-          <span>or</span>
+           <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center  after:border-t after:border-border">
+          <span className='relative z-10 bg-card px-2'>Or</span>
         </div>
 
         <Button
           onClick={signInWithGoogle}
           disabled={isGooglePending}
           variant="outline"
-          className="w-full flex items-center justify-center gap-2"
+          className="w-full flex items-center justify-center gap-2 cursor-pointer"
         >
           <FaGoogle className="size-5" />
           Continue with Google
@@ -147,13 +148,14 @@ const LoginForm = () => {
           onClick={signInWithGithub}
           disabled={isGithubPending}
           variant="outline"
-          className="w-full flex items-center justify-center gap-2"
+          className="w-full flex items-center justify-center gap-2 cursor-pointer"
         >
-          <GithubIcon className="size-5 text-blue-800" />
+          <GithubIcon className="size-5 " />
           Continue with GitHub
         </Button>
      
       </form>
+      </Form>
     </div>
   );
 };

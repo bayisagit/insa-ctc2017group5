@@ -1,26 +1,69 @@
 'use client'
 
-import React, { FormEvent, useState, useTransition } from 'react'
+import React, {  useState, useTransition } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { toast } from 'sonner'
-import { GithubIcon } from 'lucide-react'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
+import { ArrowRight,  GithubIcon, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FaGoogle } from 'react-icons/fa'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from "@hookform/resolvers/zod";
 
-const Form = () => {
+import {  SignupFormType, signupSchema } from '@/validation/signup.validation'
+import { InputField } from '@/components/FormFields'
+import { Form } from '@/components/ui/form'
+
+const Signup = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isGithubPending, startGithubTransition] = useTransition()
   const [isGooglePending, startGoogleTransition] = useTransition()
 
-  const validatePassword = (password: string) => {
-    const minLength = 8
-    const hasLetter = /[a-zA-Z]/.test(password)
-    const hasNumber = /\d/.test(password)
-    return password.length >= minLength && hasLetter && hasNumber
-  }
+
+   const form =useForm <SignupFormType>({
+    resolver:zodResolver(signupSchema),
+    defaultValues:{
+      name:"",
+      email:"",
+      password:""
+    }
+   })
+
+   const onSubmit= async(data:SignupFormType)=>{
+      try {
+
+      await authClient.signUp.email({
+        email:data.email,
+        password:data.password,
+        name:data.name,
+         callbackURL: "/login"
+      }, {
+        onRequest: () => { toast.loading('Creating account...'); },
+        onResponse: () =>{ toast.dismiss()},
+        onError: (ctx) => {
+          if (ctx.error.code === 'P2002') {
+            toast.error('Email already exists')
+          } else {
+            toast.error(ctx.error.message || 'Registration failed')
+          }
+        },
+        onSuccess: async () =>{ 
+          toast.success('Account created successfully!')
+          //  await authClient.sendVerificationEmail({
+          //   email: email,
+          //   callbackURL: "/",
+          // });
+
+
+          // toast("Please check your email to verify it or spam folder for verification link", { icon: "‼️" }); 
+          }
+      })
+    } catch (error) {
+      toast.error('An unexpected error occurred')
+    } finally {
+      setIsLoading(false)
+    }
+   }
 
   const signInWithGithub = async () => {
     startGithubTransition(async () => {
@@ -50,112 +93,77 @@ const Form = () => {
     })
   }
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsLoading(true)
-
-    const formData = new FormData(e.currentTarget)
-    const name = formData.get("name")?.toString().trim() || ''
-    const email = formData.get("email")?.toString().trim() || ''
-    const password = formData.get("password")?.toString() || ''
-
-    if (!name || !email || !password) {
-      toast.error('Please fill all fields')
-      setIsLoading(false)
-      return
-    }
-
-    if (!validatePassword(password)) {
-      toast.error('Password must be at least 8 characters with letters and numbers')
-      setIsLoading(false)
-      return
-    }
-
-    try {
-      await authClient.signUp.email({
-        email,
-        password,
-        name,
-         callbackURL: "/login"
-      }, {
-        onRequest: () => { toast.loading('Creating account...'); },
-        onResponse: () =>{ toast.dismiss()},
-        onError: (ctx) => {
-          if (ctx.error.code === 'P2002') {
-            toast.error('Email already exists')
-          } else {
-            toast.error(ctx.error.message || 'Registration failed')
-          }
-        },
-        onSuccess: () =>{ toast.success('Account created successfully!')}
-      })
-    } catch (error) {
-      toast.error('An unexpected error occurred')
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-6 bg-gray-50 dark:bg-black transition-colors">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white dark:bg-neutral-900 p-6 rounded-xl shadow-xl space-y-6"
+      <Form {...form}>
+       <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-full max-w-sm bg-white dark:bg-neutral-900 p-6 rounded-xl  space-y-3"
       >
         <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100">
           Welcome to Chopi Chopi
         </h1>
 
         <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input
+          {/* <Label htmlFor="name">Name</Label> */}
+          <InputField
+           control={form.control}
             type="text"
             name="name"
-            id="name"
-            placeholder="Enter your name"
-            required
-            minLength={2}
+            label='Full Name'
+
+          
+            placeholder="Enter your fullName"
+          
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
+          <InputField
+           control={form.control}
             type="email"
+            label='Email'
             name="email"
-            id="email"
             placeholder="Enter your email"
-            required
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
-          <Input
+        <div className="space-y-2 relative">
+          <InputField
+            control={form.control}
             type="password"
             name="password"
-            id="password"
+            label='Password'
             placeholder="At least 8 characters"
-            required
-            minLength={8}
+            showPasswordToggle
+
           />
-          <p className="text-xs text-muted-foreground">
-            Must include letters and numbers.
-          </p>
+         
+      
         </div>
 
-        <Button type="submit" disabled={isLoading} className="w-full">
-          {isLoading ? 'Creating Account...' : 'Register'}
-        </Button>
-                <p className="text-sm text-center mt-6 text-gray-600">
+       <Button type="submit" className="w-full" disabled={isLoading}>
+    {isLoading ? (
+      <>
+        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+        Creating account...
+      </>
+    ) : (
+      <>
+        Sign up <ArrowRight className="h-4 w-4 ml-2" />
+      </>
+    )}
+  </Button>
+                <p className="text-sm text-left mt-2 text-gray-600">
            have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link href="/login" className="text-blue-600 hover:underline ">
              Login
           </Link>
         </p>
 
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-          <span>or</span>
+        <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center  after:border-t after:border-border">
+          <span className='relative z-10 bg-card px-2 text-muted-foreground'>Or</span>
         </div>
 
         <Button
@@ -174,13 +182,14 @@ const Form = () => {
           variant="outline"
           className="w-full flex items-center justify-center gap-2 cursor-pointer"
         >
-          <GithubIcon className="size-5  text-blue-800 " />
+          <GithubIcon className="size-5   " />
           Continue with GitHub
         </Button>
      
       </form>
+      </Form>
     </div>
   )
 }
 
-export default Form
+export default Signup
