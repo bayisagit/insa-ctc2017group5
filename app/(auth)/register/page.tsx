@@ -30,30 +30,9 @@ const Signup = () => {
    })
 
    const onSubmit= async(data:SignupFormType)=>{
-// const { data: users, error } = await authClient.admin.listUsers({
-//   query: {
-//     searchValue: "Mekin Jemal",
-//     searchField: "name",
-//     searchOperator: "contains",
-//     limit: 100,
-//     offset: 100,
-//     sortBy: "name",
-//     sortDirection: "desc",
-//     filterField: "email",
-//     filterValue: "mekinjemal999@gmail.com",
-//     filterOperator: "eq",
-//   }
 
-// })
-// console.log("Users",users)
 
-const { data: newUser, error } = await authClient.admin.createUser({
-    email: "user@example.com", // required
-    password: "some-secure-password", // required
-    name: "James Smith", // required
-    role: "ADMIN",
-    data: { customField: "customValue" },
-});
+
       try {
 
       await authClient.signUp.email({
@@ -64,7 +43,7 @@ const { data: newUser, error } = await authClient.admin.createUser({
       }, {
         onRequest: () => { toast.loading('Creating account...'); },
         onResponse: () =>{ toast.dismiss()},
-        onError: (ctx) => {
+        onError: (ctx: { error: { code?: string; message?: string } }) => {
           if (ctx.error.code === 'P2002') {
             toast.error('Email already exists')
           } else {
@@ -96,7 +75,7 @@ const { data: newUser, error } = await authClient.admin.createUser({
         callbackURL: '/dashboard',
         fetchOptions: {
           onSuccess: () => {toast.success("Signed In successfully")},
-          onError: (ctx) => {toast.error(ctx.error.message)},
+          onError: (ctx:{ error: { code?: string; message?: string } }) => {toast.error(ctx.error.message)},
           onResponse: () => {}
         },
       })
@@ -110,7 +89,7 @@ const { data: newUser, error } = await authClient.admin.createUser({
         callbackURL: '/dashboard',
         fetchOptions: {
           onSuccess: () => {toast.success("Signed In with Google!")},
-          onError: (ctx) => {toast.error(ctx.error.message)},
+          onError: (ctx:{ error: { code?: string; message?: string } }) => {toast.error(ctx.error.message)},
           onResponse: () => {}
         },
       })

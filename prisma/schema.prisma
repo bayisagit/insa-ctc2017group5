@@ -209,6 +209,9 @@ model Store {
   deliveryZones  DeliveryZone[]
   rating         Rating[]
 
+  organization   Organization @relation(name: "OrganizationToStore",fields: [organizationId],references: [id])
+  organizationId String @unique
+
   @@map("stores")
 }
 
@@ -302,6 +305,8 @@ model Order {
   rating                Rating?
   isScheduled           Boolean       @default(false)
   payment               Payment?      @relation(name: "PaymentToOrder")
+
+  
 
   @@map("orders")
 }
@@ -506,14 +511,16 @@ model DeliveryZone {
 model Organization {
   id          String       @id
   name        String
-  slug        String?
+  slug        String?      @unique
   logo        String?
   createdAt   DateTime
   metadata    String?
   members     Member[]
   invitations Invitation[]
 
-  @@unique([slug])
+  store       Store?  @relation(name :"OrganizationToStore" )
+  storeId     String? @unique
+
   @@map("organization")
 }
 

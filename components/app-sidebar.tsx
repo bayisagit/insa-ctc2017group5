@@ -1,6 +1,7 @@
 "use client"
-
-import type * as React from "react"
+// "use server"
+// import type * as React from "react"
+import React, {useEffect,useState} from "react"
 import { BarChart3, ShoppingCart,  Users, Bell, CreditCard, Star, MapPin, Utensils, StoreIcon, TruckIcon } from "lucide-react"
 import { NavProjects } from "@/components/nav-projects" // Import NavProjects
 
@@ -8,34 +9,40 @@ import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
+import { getOrganization } from "@/server/organization"
 
 
 
 export const sidebarData = {
-  teams: [
-    {
-      id: 1,
-      name: "Mekin Admin",
-      logo: Utensils,
-      plan: "Enterprise",
-      user: {
-        name: "Admin User",
-        email: "admin@mekin.com",
-        avatar: "/avatars/admin.png"
-      }
-    },
-    {
-      id: 2,
-      name: "Operations",
-      logo: BarChart3,
-      plan: "Pro",
-      user: {
-        name: "Operations User",
-        email: "operations@mekin.com",
-        avatar: "/avatars/operations.png"
-      }
-    },
-  ],
+branches: [
+  {
+    id: 1,
+    name: " Downtown Branch",
+    type: "Restaurant",
+    location: "Downtown, Addis Ababa",
+    logo: Utensils,
+    plan: "Enterprise",
+    manager: {
+      name: "Admin User",
+      email: "admin@mekin.com",
+      avatar: "/avatars/admin.png"
+    }
+  },
+  {
+    id: 2,
+    name: "Market Branch",
+    type: "Supermarket",
+    location: "Bole, Addis Ababa",
+    logo: BarChart3,
+    plan: "Pro",
+    manager: {
+      name: "Operations User",
+      email: "operations@mekin.com",
+      avatar: "/avatars/operations.png"
+    }
+  },
+],
+
   navMain: [
     {
       id: 'dashboard',
@@ -89,34 +96,52 @@ export const sidebarData = {
         },
       ],
     },
+{
+  id: 'organizations',
+  title: "Organizations",
+  url: "/organizations",
+  icon: StoreIcon, // replace with your icon
+  items: [
     {
-      id: 'stores',
-      title: "Stores",
-      url: "/stores",
-      icon: StoreIcon,
+      id: 'all-organizations',
+      title: "All Organizations",
+      url: "/organizations/all",
+    },
+    {
+      id: 'my-organizations',
+      title: "My Organizations",
+      url: "/organizations/mine",
+    },
+    {
+      id: 'tasks',
+      title: "Tasks / Permissions",
+      url: "/organizations/tasks",
       items: [
         {
-          id: 'all-stores',
-          title: "All Stores",
-          url: "/stores/all",
+          id: 'create-project',
+          title: "Create Project",
+          url: "/organizations/tasks/create-project",
         },
         {
-          id: 'pending-approval',
-          title: "Pending Approval",
-          url: "/stores/pending",
+          id: 'manage-users',
+          title: "Manage Users",
+          url: "/organizations/tasks/manage-users",
         },
         {
-          id: 'products',
-          title: "Product Management",
-          url: "/stores/products",
+          id: 'view-reports',
+          title: "View Reports",
+          url: "/organizations/tasks/view-reports",
         },
         {
-          id: 'categories',
-          title: "Categories",
-          url: "/stores/categories",
+          id: 'settings',
+          title: "Organization Settings",
+          url: "/organizations/tasks/settings",
         },
       ],
     },
+  ],
+},
+
     {
       id: 'drivers',
       title: "Drivers",
@@ -214,20 +239,35 @@ export const sidebarData = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+// Inside AppSidebar
+export  function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  // const [organizations, setOrganizations] = React.useState<any[]>([]);
+
+  // React.useEffect(() => {
+  //   getOrganization().then((data) => setOrganizations(data));
+  // }, []);
+
+  // // Map the fetched data to the shape expected by TeamSwitcher
+  // const teams = organizations.map((org) => ({
+  //   name: org.name,
+  //   logo: org.logo ? () => <img src={org.logo} alt={org.name} /> : Utensils, // fallback icon
+  //   plan: org.members?.[0]?.role || "Member", // just an example, you can adjust
+  // }));
+  // const organazation=await getOrganization()
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={sidebarData.teams} />
+        <TeamSwitcher teams={sidebarData.branches} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={sidebarData.navMain} />
         <NavProjects projects={sidebarData.projects} /> 
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={sidebarData.teams[0].user} />
+        <NavUser user={sidebarData.branches[0]?.manager} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
