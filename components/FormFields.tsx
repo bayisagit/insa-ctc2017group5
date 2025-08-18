@@ -21,7 +21,7 @@ type InputFieldProps<T extends FieldValues = FieldValues> = {
   name: Path<T>;
   label: string;
   placeholder: string;
-  type: "email" | "password" | "text";
+  type: "email" | "password" | "text" | "number";
   icon?: React.ReactNode;
   showPasswordToggle?: boolean;
   disabled?: boolean;

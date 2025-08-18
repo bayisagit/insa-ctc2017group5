@@ -67,6 +67,15 @@ enum ProductType {
   OTHER
 }
 
+enum ColorType {
+  BLACK
+  GREEN
+  WHITE 
+  GRAY
+
+
+}
+
 model User {
   id            String         @id
   name          String
@@ -254,7 +263,8 @@ model Product {
   dimensions    String? // "10x10x10 cm"
   barcode       String?
   sku           String?
-
+  isNew         Boolean? 
+  
   @@map("products")
 }
 
@@ -266,13 +276,21 @@ model ProductVariant {
   price       Float
   isAvailable Boolean     @default(true)
   productId   String
+  images      VariantImage[]
   product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   orderItems  OrderItem[]
   cartItems   CartItem[]
+  colors      ColorType?
 
   @@map("product_variants")
 }
-
+model VariantImage {
+  id         String          @id @default(uuid())
+  url        String
+  variantId  String
+  variant    ProductVariant  @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  createdAt  DateTime        @default(now())
+}
 model Order {
   id                    String        @id @default(uuid())
   type                  OrderType     @default(DELIVERY)
@@ -289,12 +307,14 @@ model Order {
   paymentStatus         PaymentStatus @default(PENDING)
   paymentMethod         PaymentMethod
   estimatedDeliveryTime DateTime?
+  routeGeometry Json? // GeoJSON line string of the planned route
+  currentLocation Json? // Last known courier location
   reviewId              String?
   review                Review?       @relation(name: "ReviewToOrder")
   driverId              String?
   driver                Driver?       @relation(fields: [driverId], references: [id])
-  deliveryAddressId     String
-  deliveryAddress       Address       @relation(fields: [deliveryAddressId], references: [id])
+  deliveryAddressId     String?
+  deliveryAddress       Address?       @relation(fields: [deliveryAddressId], references: [id])
   storeId               String
   store                 Store         @relation(fields: [storeId], references: [id])
   userId                String
@@ -384,6 +404,10 @@ model DriverDocument {
   type        String // 'license', 'insurance', 'registration'
   documentUrl String
   expiryDate  DateTime?
+  currentLat Float?
+  currentLng Float?
+  lastLocationUpdate DateTime?
+  isOnline Boolean @default(false)
   isVerified  Boolean   @default(false)
   driverId    String
   driver      Driver    @relation(fields: [driverId], references: [id], onDelete: Cascade)
@@ -549,3 +573,10 @@ model Invitation {
 
   @@map("invitation")
 }
+
+
+// model Images {
+//   id String @unique @default(uuid())
+//   url String
+//   productVariantID @relation(fields: [])
+// }

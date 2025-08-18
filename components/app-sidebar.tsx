@@ -9,7 +9,7 @@ import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
-import { getOrganization } from "@/server/organization"
+// import { getOrganization } from "@/server/organization"
 
 
 
@@ -77,70 +77,71 @@ branches: [
         {
           id: 'all-orders',
           title: "All Orders",
-          url: "/orders/all",
+          url: "/dashboard/orders",
         },
         {
           id: 'pending',
           title: "Pending",
-          url: "/orders/pending",
+          url: "/dashboard/orders/pending",
         },
         {
           id: 'in-progress',
           title: "In Progress",
-          url: "/orders/in-progress",
+          url: "/dashboard/orders/in-progress",
         },
         {
           id: 'completed',
           title: "Completed",
-          url: "/orders/completed",
+          url: "/dashboard/orders/completed",
         },
       ],
     },
 {
-  id: 'organizations',
-  title: "Organizations",
-  url: "/organizations",
-  icon: StoreIcon, // replace with your icon
+  id: 'stores',
+  title: "Stores",
+  url: "/stores",
+  icon: StoreIcon, // replace with your store icon if needed
   items: [
     {
-      id: 'all-organizations',
-      title: "All Organizations",
-      url: "/organizations/all",
+      id: 'all-stores',
+      title: "All Stores",
+      url: "/dashboard/stores/all",
     },
     {
-      id: 'my-organizations',
-      title: "My Organizations",
-      url: "/organizations/mine",
+      id: 'my-stores',
+      title: "My Stores",
+      url: "/dashboard/stores/mine",
     },
     {
       id: 'tasks',
       title: "Tasks / Permissions",
-      url: "/organizations/tasks",
+      url: "/dashboard/stores/tasks",
       items: [
         {
-          id: 'create-project',
-          title: "Create Project",
-          url: "/organizations/tasks/create-project",
+          id: 'create-store',
+          title: "Create Store",
+          url: "/dashboard/stores/tasks/create-store",
         },
         {
-          id: 'manage-users',
-          title: "Manage Users",
-          url: "/organizations/tasks/manage-users",
+          id: 'manage-staff',
+          title: "Manage Staff",
+          url: "/dashboard/stores/tasks/manage-staff",
         },
         {
           id: 'view-reports',
           title: "View Reports",
-          url: "/organizations/tasks/view-reports",
+          url: "/dashboard/stores/tasks/view-reports",
         },
         {
           id: 'settings',
-          title: "Organization Settings",
-          url: "/organizations/tasks/settings",
+          title: "Store Settings",
+          url: "/dashboard/stores/tasks/settings",
         },
       ],
     },
   ],
-},
+}
+,
 
     {
       id: 'drivers',
