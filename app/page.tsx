@@ -35,7 +35,7 @@ export default function HomePage() {
 
        <Navbar/>
             {/* Ecommerce Promo Banner */}
-      <section className="relative z-10 px-4 mt-16">
+      <section className="relative z-10 px-4 mt-32">
         <div className="container mx-auto">
           <div className="grid gap-6 md:grid-cols-2 rounded-xl border border-border bg-card/60 p-6 md:p-8">
             <div className="flex flex-col justify-center text-center md:text-left">
