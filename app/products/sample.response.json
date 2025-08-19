@@ -1,0 +1,379 @@
+{
+    "data": [
+        {
+            "id": "34e8f163-00e8-431e-9fa4-4a5e78740816",
+            "name": "Organic Apples",
+            "description": "Fresh organic apples from local farms",
+            "image": "https://images.pexels.com/photos/1630588/pexels-photo-1630588.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": true,
+            "productType": "GROCERY",
+            "store": {
+                "id": "51fb656d-cf2e-4074-9057-f8eba5b6fc0d",
+                "name": "Fresh Groceries",
+                "logo": "https://images.pexels.com/photos/7343177/pexels-photo-7343177.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005551234",
+                "email": "info@freshgroceries.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.649Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "60f8bd50-e044-439c-b996-6593fbc2c11e",
+                    "name": "1kg Bag",
+                    "price": 4.99,
+                    "isAvailable": true,
+                    "colors": "GREEN"
+                },
+                {
+                    "id": "fc63c4e0-708d-4d9f-8c71-4d9e70b5b1eb",
+                    "name": "2kg Bag",
+                    "price": 8.99,
+                    "isAvailable": true,
+                    "colors": "GREEN"
+                }
+            ]
+        },
+        {
+            "id": "9e75f419-e3b3-4577-8e4e-6ac3a7bb71d9",
+            "name": "Organic Bananas",
+            "description": "Sweet organic bananas, perfect for snacks",
+            "image": "https://images.pexels.com/photos/321552/pexels-photo-321552.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": false,
+            "productType": "GROCERY",
+            "store": {
+                "id": "51fb656d-cf2e-4074-9057-f8eba5b6fc0d",
+                "name": "Fresh Groceries",
+                "logo": "https://images.pexels.com/photos/7343177/pexels-photo-7343177.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005551234",
+                "email": "info@freshgroceries.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.649Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "6cdac1ee-4898-4ffb-91ed-faddbb993ab4",
+                    "name": "Bunch (6 bananas)",
+                    "price": 2.49,
+                    "isAvailable": true,
+                    "colors": "GREEN"
+                }
+            ]
+        },
+        {
+            "id": "d126a6bf-9c65-4731-ae49-f9faa794cedf",
+            "name": "Organic Milk",
+            "description": "Fresh organic milk, 1 gallon",
+            "image": "https://images.pexels.com/photos/33460539/pexels-photo-33460539.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": false,
+            "productType": "GROCERY",
+            "store": {
+                "id": "51fb656d-cf2e-4074-9057-f8eba5b6fc0d",
+                "name": "Fresh Groceries",
+                "logo": "https://images.pexels.com/photos/7343177/pexels-photo-7343177.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005551234",
+                "email": "info@freshgroceries.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.649Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "90384694-68d3-4b51-acca-b5e97b458216",
+                    "name": "1 Gallon",
+                    "price": 5.49,
+                    "isAvailable": true,
+                    "colors": null
+                }
+            ]
+        },
+        {
+            "id": "feef2dc2-f3b8-4dfa-802f-19e275b9adfc",
+            "name": "Whole Grain Bread",
+            "description": "Freshly baked whole grain bread",
+            "image": "https://images.pexels.com/photos/33451415/pexels-photo-33451415.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": false,
+            "productType": "GROCERY",
+            "store": {
+                "id": "51fb656d-cf2e-4074-9057-f8eba5b6fc0d",
+                "name": "Fresh Groceries",
+                "logo": "https://images.pexels.com/photos/7343177/pexels-photo-7343177.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005551234",
+                "email": "info@freshgroceries.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.649Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "f6104839-a5b9-48d1-93df-1568bca281c1",
+                    "name": "Loaf",
+                    "price": 3.99,
+                    "isAvailable": true,
+                    "colors": null
+                }
+            ]
+        },
+        {
+            "id": "ab77a14c-c542-4ec4-9f0e-7e243b532b22",
+            "name": "iPhone 15 Pro",
+            "description": "Latest iPhone with A16 Bionic chip",
+            "image": "https://images.pexels.com/photos/5081930/pexels-photo-5081930.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": true,
+            "productType": "ELECTRONICS",
+            "store": {
+                "id": "d67284e5-0ebf-4456-951e-958b144d6e1c",
+                "name": "Tech Gadgets",
+                "logo": "https://images.pexels.com/photos/33475145/pexels-photo-33475145.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005559876",
+                "email": "info@techgadgets.com",
+                "isApproved": true,
+                "rating": []
+            },
+            "variants": [
+                {
+                    "id": "f901bcf0-2a9f-4496-aaf9-2a1dbd517143",
+                    "name": "128GB",
+                    "price": 999.99,
+                    "isAvailable": true,
+                    "colors": "BLACK"
+                },
+                {
+                    "id": "ac8520c2-6391-4f16-966b-1e4c003687b1",
+                    "name": "256GB",
+                    "price": 1099.99,
+                    "isAvailable": true,
+                    "colors": "WHITE"
+                }
+            ]
+        },
+        {
+            "id": "287f5739-fd36-4250-929f-655a72776a81",
+            "name": "MacBook Pro 16\"",
+            "description": "Powerful laptop with M2 Pro chip",
+            "image": "https://images.pexels.com/photos/4065158/pexels-photo-4065158.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": false,
+            "productType": "ELECTRONICS",
+            "store": {
+                "id": "d67284e5-0ebf-4456-951e-958b144d6e1c",
+                "name": "Tech Gadgets",
+                "logo": "https://images.pexels.com/photos/33475145/pexels-photo-33475145.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005559876",
+                "email": "info@techgadgets.com",
+                "isApproved": true,
+                "rating": []
+            },
+            "variants": [
+                {
+                    "id": "abb6bedb-31b2-4667-96a8-3f59134b4f7c",
+                    "name": "M2 Pro, 16GB RAM, 512GB SSD",
+                    "price": 2499.99,
+                    "isAvailable": true,
+                    "colors": "GRAY"
+                }
+            ]
+        },
+        {
+            "id": "cb680a36-7cfd-4ae2-af0b-c586e0e092c4",
+            "name": "Wireless Noise-Canceling Headphones",
+            "description": "Premium over-ear headphones with ANC",
+            "image": "https://images.pexels.com/photos/33433111/pexels-photo-33433111.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": true,
+            "productType": "ELECTRONICS",
+            "store": {
+                "id": "d67284e5-0ebf-4456-951e-958b144d6e1c",
+                "name": "Tech Gadgets",
+                "logo": "https://images.pexels.com/photos/33475145/pexels-photo-33475145.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005559876",
+                "email": "info@techgadgets.com",
+                "isApproved": true,
+                "rating": []
+            },
+            "variants": [
+                {
+                    "id": "4cbc28cb-1905-4fda-af28-fafbb5001a0d",
+                    "name": "Black",
+                    "price": 299.99,
+                    "isAvailable": true,
+                    "colors": "BLACK"
+                }
+            ]
+        },
+        {
+            "id": "ba8b0d62-d6ae-404d-add9-409965ea899d",
+            "name": "Bruschetta",
+            "description": "Toasted bread topped with tomatoes, garlic, and fresh basil",
+            "image": "https://images.pexels.com/photos/29021173/pexels-photo-29021173.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": true,
+            "productType": "GROCERY",
+            "store": {
+                "id": "6bd2214a-1952-406f-867d-e023cd9dfaa6",
+                "name": "Gourmet Delight",
+                "logo": "https://images.pexels.com/photos/33461913/pexels-photo-33461913.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005554321",
+                "email": "info@gourmetdelight.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.653Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "e94d0624-e230-4e02-88f3-6706955ffd90",
+                    "name": "Regular",
+                    "price": 8.99,
+                    "isAvailable": true,
+                    "colors": null
+                },
+                {
+                    "id": "710f83c9-689b-42ef-bd84-d8c3a0d2ff29",
+                    "name": "Large",
+                    "price": 12.99,
+                    "isAvailable": true,
+                    "colors": null
+                }
+            ]
+        },
+        {
+            "id": "a130066b-0cab-4afb-8ebd-accc50408787",
+            "name": "Filet Mignon",
+            "description": "8oz premium cut with mashed potatoes and seasonal vegetables",
+            "image": "https://images.pexels.com/photos/65175/pexels-photo-65175.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": true,
+            "productType": "GROCERY",
+            "store": {
+                "id": "6bd2214a-1952-406f-867d-e023cd9dfaa6",
+                "name": "Gourmet Delight",
+                "logo": "https://images.pexels.com/photos/33461913/pexels-photo-33461913.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005554321",
+                "email": "info@gourmetdelight.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.653Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "19378fac-445f-41d8-bbcc-9edf081a60b7",
+                    "name": "8oz",
+                    "price": 29.99,
+                    "isAvailable": true,
+                    "colors": null
+                },
+                {
+                    "id": "7dbf48b5-8929-4a85-9a4a-d648166f2d18",
+                    "name": "12oz",
+                    "price": 39.99,
+                    "isAvailable": true,
+                    "colors": null
+                }
+            ]
+        },
+        {
+            "id": "2a1ee04e-9b1d-4470-a790-32f1cdb09972",
+            "name": "New York Cheesecake",
+            "description": "Classic cheesecake with berry compote",
+            "image": "https://images.pexels.com/photos/32083395/pexels-photo-32083395.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": false,
+            "productType": "GROCERY",
+            "store": {
+                "id": "6bd2214a-1952-406f-867d-e023cd9dfaa6",
+                "name": "Gourmet Delight",
+                "logo": "https://images.pexels.com/photos/33461913/pexels-photo-33461913.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005554321",
+                "email": "info@gourmetdelight.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.653Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "5f19d4f0-4372-4195-b24b-f1aac6d600ea",
+                    "name": "Slice",
+                    "price": 7.99,
+                    "isAvailable": true,
+                    "colors": null
+                }
+            ]
+        },
+        {
+            "id": "e5f58fb1-b7f6-4a16-9981-3f239b82557f",
+            "name": "Mojito",
+            "description": "Classic mint, lime, rum cocktail",
+            "image": "https://images.pexels.com/photos/16774294/pexels-photo-16774294.jpeg?auto=compress&cs=tinysrgb&h=350",
+            "isAvailable": true,
+            "isFeatured": false,
+            "productType": "GROCERY",
+            "store": {
+                "id": "6bd2214a-1952-406f-867d-e023cd9dfaa6",
+                "name": "Gourmet Delight",
+                "logo": "https://images.pexels.com/photos/33461913/pexels-photo-33461913.jpeg?auto=compress&cs=tinysrgb&h=350",
+                "phone": "+18005554321",
+                "email": "info@gourmetdelight.com",
+                "isApproved": true,
+                "rating": [
+                    {
+                        "storeScore": 5,
+                        "createdAt": "2025-08-17T21:01:15.653Z"
+                    }
+                ]
+            },
+            "variants": [
+                {
+                    "id": "7d58c9cc-eb67-425b-960e-3041141b6817",
+                    "name": "Classic",
+                    "price": 9.99,
+                    "isAvailable": true,
+                    "colors": null
+                },
+                {
+                    "id": "988b2369-8a43-447b-bfb6-3284ac49e486",
+                    "name": "Premium",
+                    "price": 12.99,
+                    "isAvailable": true,
+                    "colors": null
+                }
+            ]
+        }
+    ],
+    "message": "Products fetched successfully"
+}
+
+

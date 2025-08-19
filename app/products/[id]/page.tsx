@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useProductStore } from "@/store/productStore";
-import { Star, Share2, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
+import { Star, Share2, ChevronLeft, ChevronRight, ShoppingCart, Loader } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -13,7 +13,7 @@ import { useCartStore } from "@/store/cartStore";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
-  const { selectedProduct, fetchSingleProduct } = useProductStore();
+  const { selectedProduct, fetchSingleProduct, loading } = useProductStore();
   const { addToCart } = useCartStore();
 
   const [selectedVariant, setSelectedVariant] = useState<number>(0);
@@ -23,9 +23,25 @@ export default function ProductDetailPage() {
     currentVariant?.images?.[0]?.url ?? "/placeholder.svg"
   );
 
+  // Track first-load initialization for this page
+  const [initialized, setInitialized] = useState(false);
+
   // Fetch product by ID
   useEffect(() => {
-    if (id) fetchSingleProduct(id as string);
+    let isMounted = true;
+    const run = async () => {
+      if (!id) return;
+      setInitialized(false);
+      try {
+        await fetchSingleProduct(id as string);
+      } finally {
+        if (isMounted) setInitialized(true);
+      }
+    };
+    run();
+    return () => {
+      isMounted = false;
+    };
   }, [id, fetchSingleProduct]);
 
   // Update selected image and variant when product changes
@@ -35,9 +51,13 @@ export default function ProductDetailPage() {
   }, [selectedProduct]);
 
   if (!selectedProduct) {
-    return (
+    return (!initialized || loading) ? (
+      <div className="flex justify-center py-12">
+        <Loader className="h-12 w-12 text-blue-600 animate-spin" />
+      </div>
+    ) : (
       <div className="px-4 py-12 text-center">
-        <p className="text-lg text-gray-500">Product not found.</p>
+        <p className="text-lg text-gray-500">No product available.</p>
       </div>
     );
   }

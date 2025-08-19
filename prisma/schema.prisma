@@ -11,6 +11,20 @@ datasource db {
   url      = "file:./mekin.db"
 }
 
+enum OrganizationType {
+  RESTAURANT
+  GROCERY
+  ELECTRONICS
+  BOOKSTORE
+  CLOTHING
+  PHARMACY
+  HOME
+  BEAUTY
+  SPORTS
+  FLORIST
+  SERVICE
+}
+
 enum Role {
   ADMIN
   CUSTOMER
@@ -541,6 +555,8 @@ model Organization {
   metadata    String?
   members     Member[]
   invitations Invitation[]
+  type OrganizationType @default(RESTAURANT) 
+
 
   store       Store?  @relation(name :"OrganizationToStore" )
   storeId     String? @unique

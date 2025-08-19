@@ -153,7 +153,7 @@ export default function CartPage() {
                     className="ml-4 text-gray-400 dark:text-gray-500 hover:text-red-500 "
                     onClick={() => removeFromTheCart(item.id)}
                   >
-                    <Trash2 size={18} className="text-gray-400 dark:text-red-500 hover:text-red-500" />
+                    <Trash2 size={18} className="text-red-500 hover:text-red-500 cursor-pointer" />
                   </Button>
                 </div>
               </div>

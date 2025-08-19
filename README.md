@@ -347,8 +347,3 @@ Better Auth  →  Prisma (ORM)  →  PostgreSQL (Database)  →  Neon (Hosting)
 
 4. Your app interacts only with **Better Auth** and **Prisma**, not the database directly.
 
----
-
-### 🔥 **Want me to draw a diagram** showing how these components interact (Better Auth ↔ Prisma ↔ PostgreSQL ↔ Neon)?
-
-I can provide a **visual architecture diagram** to make it crystal clear. Shall I proceed?

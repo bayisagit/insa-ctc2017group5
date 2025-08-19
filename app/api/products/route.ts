@@ -66,6 +66,12 @@ async function getProductById(productId: string) {
           logo: true,
           phone: true,
           email: true,
+          organization :{
+            select:{
+              type:true
+            }
+          },
+       
           isApproved: true,
           rating: {
             select: {

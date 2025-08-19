@@ -1,4 +1,4 @@
-import Counter from "./Counter";
+import Counter from "./counter";
 
  function ProductLayout({ children }: { children: React.ReactNode }) {
 

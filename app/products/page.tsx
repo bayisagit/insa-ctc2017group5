@@ -8,17 +8,16 @@ import {
   Star,
   ShoppingCart,
   Filter,
+  ArrowUp,
+  ArrowDown,
+  Check,
   Loader,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group";
 import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
@@ -29,41 +28,62 @@ import {
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useProductStore } from "@/store/productStore";
-import Link from "next/link";
 import { useCartStore } from "@/store/cartStore";
+import Link from "next/link";
 
-const categories = [
-  { id: "all", label: "All", icon: "🏪" },
-  { id: "grocery", label: "Grocery", icon: "🍏" },
-  { id: "phones", label: "Phones", icon: "📱" },
-  { id: "headsets", label: "Headsets", icon: "🎧" },
-  { id: "laptops", label: "Laptops", icon: "💻" },
+// Organization type icons
+const orgTypeIcons: Record<string, any> = {
+  RESTAURANT: "🍔",
+  GROCERY: "🥦",
+  ELECTRONICS: "💻",
+  BOOKSTORE: "📚",
+  CLOTHING: "👗",
+  PHARMACY: "💊",
+  HOME: "🏠",
+  BEAUTY: "💄",
+  SPORTS: "⚽",
+  FLORIST: "🌸",
+  SERVICE: "🛠️",
+};
+
+// Sorting options
+const sortOptions: Array<{
+  id: "priceAsc" | "priceDesc" | "rating" | "popularity";
+  label: string;
+  icon: any;
+}> = [
+  { id: "priceAsc", label: "Price ↑", icon: ArrowUp },
+  { id: "priceDesc", label: "Price ↓", icon: ArrowDown },
+  { id: "rating", label: "Rating", icon: Star },
+  { id: "popularity", label: "Popularity", icon: Check },
 ];
 
-// Filter Section
 function FilterSection() {
   const {
     priceRange,
     selectedCategory,
+    selectedOrgType,
+    sortBy,
     setPriceRange,
     setSelectedCategory,
+    setSelectedOrgType,
+    setSortBy,
   } = useProductStore();
 
   return (
     <div className="space-y-6">
+      {/* Categories */}
       <div>
         <h3 className="mb-3 font-semibold">Categories</h3>
         <div className="flex flex-wrap gap-2">
-          {categories.map((cat) => (
+          {["all", "grocery", "fruits", "vegetables", "dairy"].map((cat) => (
             <Button
-              key={cat.id}
-              variant={selectedCategory === cat.id ? "default" : "outline"}
+              key={cat}
+              variant={selectedCategory === cat ? "default" : "outline"}
               size="sm"
-              onClick={() => setSelectedCategory(cat.id)}
-              className="flex items-center gap-2"
+              onClick={() => setSelectedCategory(cat)}
             >
-              <span>{cat.icon}</span>
-              {cat.label}
+              {cat.toUpperCase()}
             </Button>
           ))}
         </div>
@@ -71,41 +91,80 @@ function FilterSection() {
 
       <Separator />
 
+      {/* Organization Types */}
+      <div>
+        <h3 className="mb-3 font-semibold">Organization Type</h3>
+        <div className="flex flex-wrap gap-2">
+          {["all", ...Object.keys(orgTypeIcons)].map((type) => (
+            <Button
+              key={type}
+              variant={selectedOrgType === type ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedOrgType(type)}
+              className="flex items-center gap-1"
+            >
+              {type !== "all" && <span>{orgTypeIcons[type]}</span>}
+              {type}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Price Range */}
       <div>
         <h3 className="mb-3 font-semibold">Price Range</h3>
-        s<div className="space-y-4">
-          <Slider
-            value={priceRange}
-            onValueChange={setPriceRange}
-            max={100}
-            step={1}
-            className="w-full"
+        <Slider
+          value={priceRange}
+          onValueChange={setPriceRange}
+          max={1000}
+          step={1}
+          className="w-full"
+        />
+        <div className="flex gap-2 mt-2">
+          <Input
+            type="number"
+            value={priceRange[0]}
+            onChange={(e) =>
+              setPriceRange([Number(e.target.value) || 0, priceRange[1]])
+            }
+            className="flex-1 h-8"
           />
-          <div className="flex gap-2 ">
-            <Input
-              type="number"
-              value={priceRange[0]}
-              onChange={(e) =>
-                setPriceRange([Number(e.target.value) || 0, priceRange[1]])
-              }
-              className="flex-1 h-8"
-            />
-            <Input
-              type="number"
-              value={priceRange[1]}
-              onChange={(e) =>
-                setPriceRange([priceRange[0], Number(e.target.value) || 100])
-              }
-              className="flex-1 h-8"
-            />
-          </div>
+          <Input
+            type="number"
+            value={priceRange[1]}
+            onChange={(e) =>
+              setPriceRange([priceRange[0], Number(e.target.value) || 1000])
+            }
+            className="flex-1 h-8"
+          />
+        </div>
+      </div>
+
+      <Separator />
+
+      {/* Sorting */}
+      <div>
+        <h3 className="mb-3 font-semibold">Sort By</h3>
+        <div className="flex flex-wrap gap-2">
+          {sortOptions.map((option) => (
+            <Button
+              key={option.id}
+              variant={sortBy === option.id ? "default" : "outline"}
+              size="sm"
+              className="flex items-center gap-1"
+              onClick={() => setSortBy(option.id)}
+            >
+              <option.icon className="h-3 w-3" /> {option.label}
+            </Button>
+          ))}
         </div>
       </div>
     </div>
   );
 }
 
-// Product List
 export default function ProductList() {
   const {
     filteredProducts = [],
@@ -116,21 +175,26 @@ export default function ProductList() {
     setViewMode,
     applyFilters,
     loading,
+    initialized,
+    hasMore,
+    loadMore,
+    resetPagination,
   } = useProductStore();
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const { addToCart } = useCartStore();
 
-  const hasLoadedRef = useRef(false);
+  const ranOnce = useRef(false);
   useEffect(() => {
-    if (hasLoadedRef.current) return;
-    hasLoadedRef.current = true;
+    if (ranOnce.current) return;
+    ranOnce.current = true;
     const loadProducts = async () => {
       await fetchProducts();
+      resetPagination();
       applyFilters();
     };
     loadProducts();
-  }, [fetchProducts, applyFilters]);
+  }, [fetchProducts, applyFilters, resetPagination]);
 
   return (
     <div className="px-4 py-4 sm:py-6">
@@ -176,7 +240,7 @@ export default function ProductList() {
                 </div>
               </div>
 
-              {/* View toggle (disabled for now) */}
+              {/* View toggle */}
               {/* <ToggleGroup type="single" value={viewMode} onValueChange={setViewMode}>
                 <ToggleGroupItem value="grid" aria-label="Grid view">
                   <Grid3X3 className="h-4 w-4" />
@@ -201,13 +265,13 @@ export default function ProductList() {
           </div>
 
           {/* Product Grid */}
-          {loading ? (
+          {(!initialized || loading) ? (
             <div className="flex justify-center py-12">
               <Loader className="h-12 w-12 text-blue-600 animate-spin" />
             </div>
           ) : filteredProducts.length === 0 ? (
             <div className="py-12 text-center text-muted-foreground">
-              No products found.
+              No products available.
             </div>
           ) : (
             <div
@@ -222,7 +286,7 @@ export default function ProductList() {
                   key={product.id}
                   className="group transition-shadow hover:shadow-lg"
                 >
-                  <CardContent className="p-3 sm:p-4">
+                  <CardHeader className="p-3 sm:p-4">
                     <Link href={`/products/${product.id}`}>
                       <div className="relative mb-3 sm:mb-4">
                         <img
@@ -235,6 +299,12 @@ export default function ProductList() {
                             Featured
                           </Badge>
                         )}
+                        {/* {product.store.organization.type && (
+                          <Badge className="absolute top-2 right-2 bg-blue-500 text-xs flex items-center gap-1">
+                            {orgTypeIcons[product.store.organization.type]}{" "}
+                            {product.store.organization.type}
+                          </Badge>
+                        )} */}
                       </div>
 
                       <div className="space-y-2">
@@ -246,7 +316,7 @@ export default function ProductList() {
                         {product.variants && (
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-base font-bold text-blue-600 sm:text-lg">
-                              ${product.variants[0].price.toFixed(2)}
+                              {(product.variants[0].price * 100).toFixed(2)} Birr
                             </span>
                             {product.variants.length > 1 && (
                               <Badge className="text-xs">
@@ -262,14 +332,9 @@ export default function ProductList() {
                         <p className="text-xs text-muted-foreground">
                           Contact: {product.store.phone}
                         </p>
+
                         <div className="flex items-center gap-1">
-                          {[
-                            ...Array(
-                              Math.round(
-                                product.store.rating[0]?.storeScore || 0
-                              )
-                            ),
-                          ].map((_, i) => (
+                          {[...Array(Math.round(product.store.rating[0]?.storeScore || 0))].map((_, i) => (
                             <Star
                               key={i}
                               className="h-3 w-3 fill-yellow-400 text-yellow-400"
@@ -281,21 +346,35 @@ export default function ProductList() {
                         </div>
                       </div>
                     </Link>
+                  </CardHeader>
 
-                    <div className="flex gap-2 pt-2 cursor-pointer">
-                      <Button
-                        className="flex-1"
-                        size="sm"
-                        onClick={() => addToCart(product)}
-                      >
-                        <ShoppingCart className="mr-1 h-4 w-4 sm:mr-2" />
-                        <span className="xs:inline hidden">Add to cart</span>
-                        <span className="xs:hidden">Add</span>
-                      </Button>
-                    </div>
+                  <CardContent className="flex gap-2 pt-2 cursor-pointer">
+                    <Button
+                      className="flex-1"
+                      size="sm"
+                      onClick={() => addToCart(product)}
+                    >
+                      <ShoppingCart className="mr-1 h-4 w-4 sm:mr-2" />
+                      <span className="xs:inline hidden">Add to cart</span>
+                      <span className="xs:hidden">Add</span>
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          )}
+          
+          {/* Load More Button */}
+          {hasMore && (
+            <div className="flex justify-center mt-8">
+              <Button 
+                onClick={loadMore}
+                variant="outline"
+                size="lg"
+                className="px-8"
+              >
+                Load More Products
+              </Button>
             </div>
           )}
         </main>
