@@ -238,10 +238,6 @@ export const { signIn, signUp, useSession } = authClient;
 I can also provide **a folder structure recommendation** for this Next.js + Better Auth project. Shall I proceed?
 
 
-Great question! Understanding the relationship between **Better Auth**, **Prisma**, **PostgreSQL (PSQL)**, and **Neon** is essential for setting up authentication in a Next.js app. Here’s how they are linked:
-
----
-
 ## ✅ **1. Better Auth** – The Authentication Layer
 
 * **What it is**:
@@ -347,8 +343,3 @@ Better Auth  →  Prisma (ORM)  →  PostgreSQL (Database)  →  Neon (Hosting)
 
 4. Your app interacts only with **Better Auth** and **Prisma**, not the database directly.
 
----
-
-### 🔥 **Want me to draw a diagram** showing how these components interact (Better Auth ↔ Prisma ↔ PostgreSQL ↔ Neon)?
-
-I can provide a **visual architecture diagram** to make it crystal clear. Shall I proceed?
