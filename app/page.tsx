@@ -7,68 +7,65 @@ import { Badge } from "@/components/ui/badge";
 import { Truck, Clock, Shield, Star, MapPin, Smartphone, Users, Package } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "@/components/toggle-theme";
+import Navbar from "@/components/Navbar";
+import Squares from "@/components/animations/square";
+import GridDistortion from "@/components/animations/grid-distortion";
+import Image from "next/image";
 // import Particles from "./test";
 
 export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-background">
-      {/* Particle Background */}
-      {/* <div className="fixed inset-0 -z-10">
-        <Particles
-          particleColors={["#ffffff", "#ffffff"]}
-          particleCount={200}
-          particleSpread={10}
-          speed={0.1}
-          particleBaseSize={100}
-          moveParticlesOnHover={true}
-          alphaParticles={false}
-          disableRotation={false}
-          className="w-full h-full"
-        />
-      </div> */}
+    
 
-      {/* Header */}
-      <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Package className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold text-foreground font-sans">Mekin</span>
-          </div>
-
-          <nav className="hidden md:flex items-center space-x-6">
-            <a href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </a>
-            <a href="#how-it-works" className="text-muted-foreground hover:text-foreground transition-colors">
-              How it Works
-            </a>
-            <a href="#stores" className="text-muted-foreground hover:text-foreground transition-colors">
-              
-            </a>
-            <a href="/products" className="text-muted-foreground hover:text-foreground transition-colors">
-              Order Products
-            </a>
-            <Link href="/delivery" className="flex items-center space-x-1 text-primary font-medium hover:underline">
-              <MapPin className="w-4 h-4" />
-              <span>Track Delivery</span>
-            </Link>
-          </nav>
-
-          <div className="flex items-center space-x-3">
-            <Link href="/login">
-              <Button variant="ghost" className="hidden md:inline-flex">
-                Sign In
-              </Button>
-            </Link>
-            <Button className="bg-primary hover:bg-primary/90">Get Started</Button>
-          </div>
-
-          <ModeToggle />
+    <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute inset-0 opacity-25 dark:opacity-15">
+          <GridDistortion
+            imageSrc="/diverse-customer-group.png"
+            grid={12}
+            mouse={0.1}
+            strength={0.12}
+            relaxation={0.92}
+          />
         </div>
-      </header>
+        <Squares/>
+        </div>
+        
 
+
+       <Navbar/>
+            {/* Ecommerce Promo Banner */}
+      <section className="relative z-10 px-4 mt-16">
+        <div className="container mx-auto">
+          <div className="grid gap-6 md:grid-cols-2 rounded-xl border border-border bg-card/60 p-6 md:p-8">
+            <div className="flex flex-col justify-center text-center md:text-left">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-3">
+                Shop smarter. Deliver faster.
+              </h2>
+              <p className="text-muted-foreground mb-4">
+                Discover local products, real-time tracking, and secure checkout — all in one place.
+              </p>
+              <div className="flex justify-center md:justify-start gap-3">
+                <Link href="/products">
+                  <Button size="sm" className="bg-primary hover:bg-primary/90">Shop Now</Button>
+                </Link>
+                <Link href="#features">
+                  <Button size="sm" variant="outline">See Features</Button>
+                </Link>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="relative h-28 sm:h-36 md:h-44 rounded-lg overflow-hidden border border-border">
+                <Image src="/admin-interface.png" alt="Storefront and cart UI" fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
+              </div>
+              <div className="relative h-28 sm:h-36 md:h-44 rounded-lg overflow-hidden border border-border">
+                <Image src="/professional-driver.png" alt="Professional delivery driver" fill className="object-cover" sizes="(max-width: 768px) 50vw, 33vw" />
+              </div>
+            </div>
+          </div>
+
+          </div>
+          </section>
       {/* Hero Section */}
       <section className="py-20 px-4 relative z-10">
         <div className="container mx-auto text-center max-w-4xl">

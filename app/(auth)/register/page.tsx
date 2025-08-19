@@ -1,210 +1,177 @@
-// 'use client'
+"use client";
 
-// import React, {  useState, useTransition } from 'react'
-// import { authClient } from '@/lib/auth-client'
-// import { toast } from 'sonner'
-// import { ArrowRight,  GithubIcon, Loader2 } from 'lucide-react'
-// import { Button } from '@/components/ui/button'
-// import { FaGoogle } from 'react-icons/fa'
-// import Link from 'next/link'
-// import { useForm } from 'react-hook-form'
-// import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { toast } from "sonner";
 
-// import {  SignupFormType, signupSchema } from '@/validation/signup.validation'
-// import { InputField } from '@/components/FormFields'
-// import { Form } from '@/components/ui/form'
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Form } from "@/components/ui/form";
+import { InputField } from "@/components/FormFields";
+import { authClient } from "@/lib/auth-client";
+// import { GoogleIcon } from "@/components/icons/GoogleIcon";
+// import { GithubIcon } from "@/components/icons/GithubIcon";
+// import { LogoIcon } from "@/components/logo";
 
-// const Signup = () => {
-//   const [isLoading, setIsLoading] = useState(false)
-//   const [isGithubPending, startGithubTransition] = useTransition()
-//   const [isGooglePending, startGoogleTransition] = useTransition()
+import {  SignupFormType, signupSchema } from "@/validation/signup.validation";
+import { GoogleIcon } from "@/components/icons/GoogleIcon";
+import { GithubIcon } from "@/components/icons/GithubIcon";
 
+export default function SignupPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGithubPending, startGithubTransition] = useTransition();
+  const [isGooglePending, startGoogleTransition] = useTransition();
 
-//    const form =useForm <SignupFormType>({
-//     resolver:zodResolver(signupSchema),
-//     defaultValues:{
-//       name:"",
-//       email:"",
-//       password:""
-//     }
-//    })
+  const form = useForm<SignupFormType>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
 
-//    const onSubmit= async(data:SignupFormType)=>{
+  // ---- Social Logins ----
+  const signUpWithGithub = async () => {
+    startGithubTransition(async () => {
+      await authClient.signIn.social({
+        provider: "github",
+        callbackURL: "/dashboard",
+        fetchOptions: {
+          onSuccess: () => {toast.success("Signed up with GitHub")},
+          onError: (ctx) => {toast.error(ctx.error.message)},
+        },
+      });
+    });
+  };
 
+  const signUpWithGoogle = async () => {
+    startGoogleTransition(async () => {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+        fetchOptions: {
+          onSuccess: () => {toast.success("Signed up with Google")},
+          onError: (ctx) => {toast.error(ctx.error.message)},
+        },
+      });
+    });
+  };
 
+  // ---- Email Signup ----
+  const onSubmit = async (data: SignupFormType) => {
+    try {
+      await authClient.signUp.email(
+        { email: data.email, password: data.password, name: data.name, callbackURL: "/dashboard" },
+        {
+          onRequest: () => {toast.loading("Creating account...")},
+          onResponse: () => {toast.dismiss()},
+          onSuccess: () => {toast.success("Account created successfully!")},
+          onError: (ctx) => {toast.error(ctx.error.message || "Signup failed")},
+        }
+      );
+    } catch (error) {
+      toast.error("Unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-//       try {
-
-//       await authClient.signUp.email({
-//         email:data.email,
-//         password:data.password,
-//         name:data.name,
-//          callbackURL: "/login"
-//       }, {
-//         onRequest: () => { toast.loading('Creating account...'); },
-//         onResponse: () =>{ toast.dismiss()},
-//         onError: (ctx: { error: { code?: string; message?: string } }) => {
-//           if (ctx.error.code === 'P2002') {
-//             toast.error('Email already exists')
-//           } else {
-//             toast.error(ctx.error.message || 'Registration failed')
-//           }
-//         },
-//         onSuccess: async () =>{ 
-//           toast.success('Account created successfully!')
-//           //  await authClient.sendVerificationEmail({
-//           //   email: email,
-//           //   callbackURL: "/",
-//           // });
-
-
-//           // toast("Please check your email to verify it or spam folder for verification link", { icon: "‼️" }); 
-//           }
-//       })
-//     } catch (error) {
-//       toast.error('An unexpected error occurred')
-//     } finally {
-//       setIsLoading(false)
-//     }
-//    }
-
-//   const signInWithGithub = async () => {
-//     startGithubTransition(async () => {
-//       await authClient.signIn.social({
-//         provider: "github",
-//         callbackURL: '/dashboard',
-//         fetchOptions: {
-//           onSuccess: () => {toast.success("Signed In successfully")},
-//           onError: (ctx:{ error: { code?: string; message?: string } }) => {toast.error(ctx.error.message)},
-//           onResponse: () => {}
-//         },
-//       })
-//     })
-//   }
-
-//   const signInWithGoogle = async () => {
-//     startGoogleTransition(async () => {
-//       await authClient.signIn.social({
-//         provider: "google",
-//         callbackURL: '/dashboard',
-//         fetchOptions: {
-//           onSuccess: () => {toast.success("Signed In with Google!")},
-//           onError: (ctx:{ error: { code?: string; message?: string } }) => {toast.error(ctx.error.message)},
-//           onResponse: () => {}
-//         },
-//       })
-//     })
-//   }
-
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center px-4 py-6 bg-gray-50 dark:bg-black transition-colors">
-//       <Form {...form}>
-//        <form
-//         onSubmit={form.handleSubmit(onSubmit)}
-//         className="w-full max-w-sm bg-white dark:bg-neutral-900 p-6 rounded-xl  space-y-3"
-//       >
-//         <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100">
-//           Welcome to Chopi Chopi
-//         </h1>
-
-//         <div className="space-y-2">
-//           {/* <Label htmlFor="name">Name</Label> */}
-//           <InputField
-//            control={form.control}
-//             type="text"
-//             name="name"
-//             label='Full Name'
-
-          
-//             placeholder="Enter your fullName"
-          
-//           />
-//         </div>
-
-//         <div className="space-y-2">
-//           <InputField
-//            control={form.control}
-//             type="email"
-//             label='Email'
-//             name="email"
-//             placeholder="Enter your email"
-//           />
-//         </div>
-
-//         <div className="space-y-2 relative">
-//           <InputField
-//             control={form.control}
-//             type="password"
-//             name="password"
-//             label='Password'
-//             placeholder="At least 8 characters"
-//             showPasswordToggle
-
-//           />
-         
-      
-//         </div>
-
-//        <Button type="submit" className="w-full" disabled={isLoading}>
-//     {isLoading ? (
-//       <>
-//         <Loader2 className="h-4 w-4 animate-spin mr-2" />
-//         Creating account...
-//       </>
-//     ) : (
-//       <>
-//         Sign up <ArrowRight className="h-4 w-4 ml-2" />
-//       </>
-//     )}
-//   </Button>
-//                 <p className="text-sm text-left mt-2 text-gray-600">
-//            have an account?{" "}
-//           <Link href="/login" className="text-blue-600 hover:underline ">
-//              Login
-//           </Link>
-//         </p>
-
-//         <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center  after:border-t after:border-border">
-//           <span className='relative z-10 bg-card px-2 text-muted-foreground'>Or</span>
-//         </div>
-
-//         <Button
-//           onClick={signInWithGoogle}
-//           disabled={isGooglePending}
-//           variant="outline"
-//           className="w-full flex items-center justify-center gap-2 cursor-pointer"
-//         >
-//           <FaGoogle className="size-5" />
-//           Continue with Google
-//         </Button>
-
-//         <Button
-//           onClick={signInWithGithub}
-//           disabled={isGithubPending}
-//           variant="outline"
-//           className="w-full flex items-center justify-center gap-2 cursor-pointer"
-//         >
-//           <GithubIcon className="size-5   " />
-//           Continue with GitHub
-//         </Button>
-     
-//       </form>
-//       </Form>
-//     </div>
-//   )
-// }
-
-// export default Signup
-
-
-import SignupPage from '@/components/auth/signup'
-import React from 'react'
-
-const Register = () => {
   return (
-    <div><SignupPage /></div>
-  )
-}
+    <section className="flex h-screen bg-zinc-50 px-4 py-10 md:py-10 dark:bg-transparent">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="bg-card m-auto h-fit w-full max-w-sm rounded-[calc(var(--radius)+.125rem)] border p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]"
+        >
+          <div className="p-8 ">
+            <div>
+              {/* <Link href="/" aria-label="go home">
+                {/* <LogoIcon className="h-6 w-6" /> */}
+              {/* </Link>  */}
+              <h1 className="mb-1 mt-4 text-xl font-semibold">
+                Create an Account
+              </h1>
+              <p className="text-sm">Welcome! Create an account to get started</p>
+            </div>
 
-export default Register
+            {/* Social Signup */}
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={signUpWithGoogle}
+                disabled={isGooglePending}
+                className="flex gap-2"
+              >
+                <GoogleIcon className="h-4 w-4" />
+                <span>Google</span>
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                onClick={signUpWithGithub}
+                disabled={isGithubPending}
+                className="flex gap-2"
+              >
+                <GithubIcon className="h-4 w-4" />
+                <span>GitHub</span>
+              </Button>
+            </div>
+
+            <hr className="my-4 border-dashed" />
+
+            {/* Form Fields */}
+            <div className="space-y-6">
+              <InputField
+                control={form.control}
+                name="name"
+                type="text"
+                label="Full Name"
+                placeholder="Enter your full name"
+              />
+
+              <InputField
+                control={form.control}
+                name="email"
+                type="email"
+                label="Email"
+                placeholder="Enter your email"
+              />
+
+              <div className="space-y-0.5">
+                <Label htmlFor="password" className="text-sm">
+                  Password
+                </Label>
+                <InputField
+                  control={form.control}
+                  name="password"
+                  type="password"
+                  label=""
+                  placeholder="At least 8 characters"
+                  showPasswordToggle
+                />
+              </div>
+
+              <Button type="submit" disabled={isLoading} className="w-full">
+                {isLoading ? "Signing up..." : "Sign Up"}
+              </Button>
+            </div>
+          </div>
+
+          {/* <div className="bg-muted rounded-(--radius) border p-3"> */}
+            <p className="text-accent-foreground text-center text-sm p-3">
+              Already have an account? {" "}
+              <Button asChild variant="link" className="px-2">
+                <Link href="/login">Sign In</Link>
+              </Button>
+            </p>
+          {/* </div> */}
+        </form>
+      </Form>
+    </section>
+  );
+}

@@ -1,174 +1,180 @@
-'use client';
+"use client";
 
-import LoginPage from '@/components/auth/login';
-// import React, { FormEvent, useState, useTransition } from 'react';
-// import { authClient } from '@/lib/auth-client';
-// import { toast } from 'sonner';
-// import { GithubIcon } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-// import { FaGoogle } from 'react-icons/fa';
-// import Link from 'next/link';
-// import { useForm } from 'react-hook-form';
-// import { loginFormType, loginSchema } from '@/validation/login.validation';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { Form } from '@/components/ui/form';
-// import { InputField } from '@/components/FormFields';
+import React, { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { toast } from "sonner";
 
-// const LoginForm = () => {
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [isGithubPending, startGithubTransition] = useTransition();
-//   const [isGooglePending, startGoogleTransition] = useTransition();
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Form } from "@/components/ui/form";
+import { InputField } from "@/components/FormFields";
+import { authClient } from "@/lib/auth-client";
 
-//  const form =useForm<loginFormType>({
-//   resolver:zodResolver(loginSchema),
-//   defaultValues:{
-//     email:"",
-//     password:""
+import { loginFormType, loginSchema } from "@/validation/login.validation";
+import { GoogleIcon } from "@/components/icons/GoogleIcon";
+import { GithubIcon } from "@/components/icons/GithubIcon";
 
-//   }
-//  })
+export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGithubPending, startGithubTransition] = useTransition();
+  const [isGooglePending, startGoogleTransition] = useTransition();
 
+  const form = useForm<loginFormType>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
+  // ---- Auth Handlers ----
+  const signInWithGithub = async () => {
+    startGithubTransition(async () => {
+      await authClient.signIn.social({
+        provider: "github",
+        callbackURL: "/dashboard",
+        fetchOptions: {
+          onSuccess: () => {toast.success("Signed in with GitHub")},
+          onError: (ctx) => {toast.error(ctx.error.message)},
+        },
+      });
+    });
+  };
 
-//   const signInWithGithub = async () => {
-//     startGithubTransition(async () => {
-//       await authClient.signIn.social({
-//         provider: 'github',
-//         callbackURL: '/dashboard',
-//         fetchOptions: {
-//           onSuccess: () => {
-//             toast.success('Signed in with GitHub');
-//           },
-//           onError: (ctx) => {
-//             toast.error(ctx.error.message);
-//           },
-//           onResponse: () => {
-//             console.log('GitHub sign-in response');
-//           },
-//         },
-//       });
-//     });
-//   };
+  const signInWithGoogle = async () => {
+    startGoogleTransition(async () => {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/dashboard",
+        fetchOptions: {
+          onSuccess: () => {toast.success("Signed in with Google")},
+          onError: (ctx) => {toast.error(ctx.error.message)},
+        },
+      });
+    });
+  };
 
-//   const signInWithGoogle = async () => {
-//     startGoogleTransition(async () => {
-//       await authClient.signIn.social({
-//         provider: 'google',
-//         callbackURL: '/dashboard',
-//         fetchOptions: {
-//           onSuccess: () => {
-//             toast.success('Signed in with Google');
-//           },
-//           onError: (ctx) => {
-//             toast.error(ctx.error.message);
-//           },
-//           onResponse: () => {
-//             console.log('Google sign-in response');
-//           },
-//         },
-//       });
-//     });
-//   };
+  const onSubmit = async (data: loginFormType) => {
+    try {
+      await authClient.signIn.email(
+        { email: data.email, password: data.password, callbackURL: "/dashboard" },
+        {
+          onRequest: () => {toast.loading("Signing in...")},
+          onResponse: () => {toast.dismiss()},
+          onSuccess: () => {toast.success("Login successful!")},
+          onError: (ctx) => {toast.error(ctx.error.message || "Login failed")},
+        }
+      );
+    } catch (error) {
+      toast.error("Unexpected error occurred");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-//   const onSubmit = async (data:loginFormType) => {
-
-//     try {
-//       await authClient.signIn.email(
-//         { email:data.email, password:data.password , callbackURL: "/dashboard"},
-//         {
-//           onRequest: () => {toast.loading('Signing in...')},
-//           onResponse: () => {toast.dismiss()},
-//           onSuccess: () => {toast.success('Login successful!')},
-//           onError: (ctx) => {toast.error(ctx.error.message || 'Login failed')},
-//         }
-//       );
-//     } catch (error) {
-//       toast.error('Unexpected error occurred');
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center px-4 py-6 bg-gray-50 dark:bg-black transition-colors">
-//       <Form {...form}>
-//       <form
-//         onSubmit={form.handleSubmit(onSubmit)}
-//         className="w-full max-w-sm bg-white dark:bg-neutral-900 p-6 rounded-xl  space-y-2"
-//       >
-//         <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100">
-//           Login to Chopi Chopi
-//         </h1>
-//    <div className="space-y-2">
-//           <InputField
-//            control={form.control}
-//             type="email"
-//             label='Email'
-//             name="email"
-//             placeholder="Enter your email"
-//           />
-//         </div>
-
-//         <div className="space-y-2 relative">
-//           <InputField
-//             control={form.control}
-//             type="password"
-//             name="password"
-//             label='Password'
-//             placeholder="At least 8 characters"
-//             showPasswordToggle
-
-//           />
-//           </div>
-           
-//         <Button type="submit" disabled={isLoading} className="w-full cursor-pointer">
-//           {isLoading ? 'Logging in...' : 'Login'}
-//         </Button>
-//                 <p className="text-sm text-center mt-6 text-gray-600">
-//           Don’t have an account?{" "}
-//           <Link href="/register" className="text-blue-600 hover:underline">
-//             Create one
-//           </Link>
-//         </p>
-
-//            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center  after:border-t after:border-border">
-//           <span className='relative z-10 bg-card px-2'>Or</span>
-//         </div>
-
-//         <Button
-//           onClick={signInWithGoogle}
-//           disabled={isGooglePending}
-//           variant="outline"
-//           className="w-full flex items-center justify-center gap-2 cursor-pointer"
-//         >
-//           <FaGoogle className="size-5" />
-//           Continue with Google
-//         </Button>
-
-//         <Button
-//           onClick={signInWithGithub}
-//           disabled={isGithubPending}
-//           variant="outline"
-//           className="w-full flex items-center justify-center gap-2 cursor-pointer"
-//         >
-//           <GithubIcon className="size-5 " />
-//           Continue with GitHub
-//         </Button>
-     
-//       </form>
-//       </Form>
-//     </div>
-//   );
-// };
-
-// export default LoginForm;
-
-import React from 'react'
-
-const Login = () => {
   return (
-    <div><LoginPage/></div>
-  )
-}
+    <section className="flex h-screen bg-zinc-50 px-4 py-8 md:py-10 dark:bg-transparent">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="bg-card m-auto h-fit w-full max-w-sm rounded-[calc(var(--radius)+.125rem)] border p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]"
+        >
+          <div className="p-8 pb-6">
+            <div>
+              {/* <Link href="/" aria-label="go home">
+                {/* <LogoIcon /> */} 
+              {/* </Link>  */}
+              <h1 className="mb-1 mt-4 text-xl font-semibold">
+                Sign In to Tailark
+              </h1>
+              <p className="text-sm">Welcome back! Sign in to continue</p>
+            </div>
 
-export default Login
+            {/* Social Login */}
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              {/* Google */}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={signInWithGoogle}
+                disabled={isGooglePending}
+                className="flex items-center gap-2"
+              >
+                        <GoogleIcon className="h-4 w-4" />
+                
+                <span>Google</span>
+              </Button>
+
+              {/* GitHub */}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={signInWithGithub}
+                disabled={isGithubPending}
+                className="flex items-center gap-2"
+              >
+                <GithubIcon className="h-4 w-4" />
+                <span>GitHub</span>
+              </Button>
+            </div>
+
+            <hr className="my-4 border-dashed" />
+
+            {/* Form Fields */}
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <InputField
+                  control={form.control}
+                  name="email"
+                  type="email"
+                  label="Email"
+                  placeholder="Enter your email"
+                />
+              </div>
+
+              <div className="space-y-0.5">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password" className="text-sm">
+                    Password
+                  </Label>
+                  <Button asChild variant="link" size="sm">
+                    <Link href="/forget-password" className="text-sm">
+                      Forgot your Password?
+                    </Link>
+                  </Button>
+                </div>
+                <InputField
+                  control={form.control}
+                  name="password"
+                  type="password"
+                  label=""
+                  placeholder="At least 8 characters"
+                  showPasswordToggle
+                />
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full cursor-pointer"
+              >
+                {isLoading ? "Logging in..." : "Sign In"}
+              </Button>
+            </div>
+          </div>
+
+          {/* <div className="bg-muted rounded-(--radius) border p-3"> */}
+            <p className="text-accent-foreground text-center text-sm p-3">
+              Don't have an account?{" "}
+              <Button asChild variant="link" className="px-2">
+                <Link href="/register">Create account</Link>
+              </Button>
+            </p>
+          {/* </div> */}
+        </form>
+      </Form>
+    </section>
+  );
+}
