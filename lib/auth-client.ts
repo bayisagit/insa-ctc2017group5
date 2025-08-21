@@ -1,8 +1,24 @@
-import { createAuthClient } from "better-auth/react"
+import { createAuthClient } from "better-auth/client"
+import { organizationClient,adminClient
+ } from "better-auth/client/plugins"
+ import { ac, ADMIN, STORE_OWNER, DRIVER, CUSTOMER } from "./permissions";
+ 
+ 
 export const authClient = createAuthClient({
-    /** The base URL of the server (optional if you're using the same domain) */
-    baseURL: process.env.NEXT_PUBLIC_API_URL
+    plugins: [ 
+        organizationClient() ,
+         adminClient({
+            ac,
+                  roles: {
+                    ADMIN,
+                    STORE_OWNER,
+                    DRIVER,
+                    CUSTOMER,
+                  },
+                  defaultRole: "CUSTOMER",
+                  adminRoles: ["ADMIN"], // Roles with admin capabilities
+                  adminUserIds: process.env.ADMIN_USER_IDS?.split(",") || [], // specific IDs
+         })
+    ] 
 })
 
-
-export const {}=authClient;

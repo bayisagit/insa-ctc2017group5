@@ -1,8 +1,8 @@
 
 
-# 🚀 Food Delivery App Implementation Guide (Next.js + Better Auth)
+# Food Delivery App Implementation Guide (Next.js + Better Auth)
 
-## 🟢 Step 1: Next.js Initial Setup
+##  Step 1: Next.js Initial Setup
 
 1. **Create Next.js Project**
 
@@ -36,7 +36,7 @@
 
 ---
 
-## 🟢 Step 2: Authentication Setup with Better Auth
+## Step 2: Authentication Setup with Better Auth
 
 ### 2.1 Install Dependencies
 
@@ -136,7 +136,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-## 🟢 Step 3: User Authentication (Forms & Flows)
+##  Step 3: User Authentication (Forms & Flows)
 
 1. **Email & Password Authentication**
 
@@ -156,7 +156,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-## 🟢 Step 4: Advanced Authentication Features
+##  Step 4: Advanced Authentication Features
 
 1. Configure:
 
@@ -174,7 +174,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-## 🟢 Step 5: Session Management
+##  Step 5: Session Management
 
 1. Implement `useSession` hook in components
 2. Configure session expiration
@@ -186,7 +186,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-## 🟢 Step 6: Role-Based Access Control (RBAC)
+## Step 6: Role-Based Access Control (RBAC)
 
 1. Add `UserRole` enum to Prisma
 2. Push database changes
@@ -199,7 +199,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-## 🟢 Step 7: OAuth Integration (Optional)
+##  Step 7: OAuth Integration (Optional)
 
 1. Enable Google OAuth
 2. Enable GitHub OAuth
@@ -207,7 +207,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-## 🟢 Step 8: Email Verification & Password Recovery
+##  Step 8: Email Verification & Password Recovery
 
 1. Set up **Nodemailer**
 2. Implement:
@@ -217,7 +217,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-## 🟢 Step 9: User Management & Advanced Features
+##  Step 9: User Management & Advanced Features
 
 1. Profile update (name, email, password)
 2. Magic link authentication
@@ -225,7 +225,7 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-### ✅ Additional Notes
+###  Additional Notes
 
 * Test each section before moving on
 * Truncate the database when experimenting with new configs
@@ -242,7 +242,7 @@ Great question! Understanding the relationship between **Better Auth**, **Prisma
 
 ---
 
-## ✅ **1. Better Auth** – The Authentication Layer
+##  **1. Better Auth** – The Authentication Layer
 
 * **What it is**:
   A lightweight authentication library for Next.js and other frameworks.
@@ -259,7 +259,7 @@ Great question! Understanding the relationship between **Better Auth**, **Prisma
 
 ---
 
-## ✅ **2. Prisma** – The ORM (Object-Relational Mapper)
+##  **2. Prisma** – The ORM (Object-Relational Mapper)
 
 * **What it is**:
   A modern ORM for Node.js/TypeScript that provides an easy way to interact with SQL databases.
@@ -278,7 +278,7 @@ Great question! Understanding the relationship between **Better Auth**, **Prisma
 
 ---
 
-## ✅ **3. PostgreSQL (PSQL)** – The Database
+##  **3. PostgreSQL (PSQL)** – The Database
 
 * **What it is**:
   An open-source relational database (SQL-based).
@@ -299,7 +299,7 @@ Great question! Understanding the relationship between **Better Auth**, **Prisma
 
 ---
 
-## ✅ **4. Neon** – PostgreSQL Hosting (Cloud DB)
+##  **4. Neon** – PostgreSQL Hosting (Cloud DB)
 
 * **What it is**:
   A serverless PostgreSQL provider (similar to Supabase, Render, Railway).
@@ -333,7 +333,7 @@ Better Auth  →  Prisma (ORM)  →  PostgreSQL (Database)  →  Neon (Hosting)
 
 ---
 
-## ✅ Example Connection Flow:
+##  Example Connection Flow:
 
 1. You configure `DATABASE_URL` in `.env` with the Neon connection string:
 
