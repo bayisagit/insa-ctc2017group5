@@ -82,7 +82,7 @@ export const auth = betterAuth({
 
 ### 2.4 Configure Database for Better Auth
 
-You can use **SQLite** or **PostgreSQL** with Prisma.
+We can use **SQLite** or **PostgreSQL** with Prisma.
 
 #### Example with Prisma:
 
@@ -132,7 +132,7 @@ export const authClient = createAuthClient({
 export const { signIn, signUp, useSession } = authClient;
 ```
 
-✅ **Your app is now ready to handle authentication!**
+✅ **Our app is now ready to handle authentication!**
 
 ---
 
@@ -234,13 +234,6 @@ export const { signIn, signUp, useSession } = authClient;
 
 ---
 
-🔹 Do you want me to **also rewrite this into a fully copy-paste-ready markdown with commands grouped by phase (Setup → Auth → Features → Deployment)?**
-I can also provide **a folder structure recommendation** for this Next.js + Better Auth project. Shall I proceed?
-
-
-Great question! Understanding the relationship between **Better Auth**, **Prisma**, **PostgreSQL (PSQL)**, and **Neon** is essential for setting up authentication in a Next.js app. Here’s how they are linked:
-
----
 
 ##  **1. Better Auth** – The Authentication Layer
 
