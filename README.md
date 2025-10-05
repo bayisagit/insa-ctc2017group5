@@ -305,7 +305,7 @@ Great question! Understanding the relationship between **Better Auth**, **Prisma
   A serverless PostgreSQL provider (similar to Supabase, Render, Railway).
   It hosts PostgreSQL databases in the cloud, so you don’t need to run PostgreSQL locally.
 
-* **What it does**:
+* **What it does**:it
 
   * Provides a hosted PostgreSQL database with a connection URL.
   * Scales automatically and offers free tiers for development.
