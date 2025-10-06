@@ -10,16 +10,16 @@ const PEXELS_BASE_URL = 'https://api.pexels.com/v1';
 
 
 // Function to get random images from Pexels
-interface PexelsPhotoSrc {
-  original: string;
-  large2x: string;
-  large: string;
-  medium: string;
-  small: string;
-  portrait: string;
-  landscape: string;
-  tiny: string;
-}
+// interface PexelsPhotoSrc {
+//   original: string;
+//   large2x: string;
+//   large: string;
+//   medium: string;
+//   small: string;
+//   portrait: string;
+//   landscape: string;
+//   tiny: string;
+// }
 
 // interface PexelsPhoto {
 //   id: number;

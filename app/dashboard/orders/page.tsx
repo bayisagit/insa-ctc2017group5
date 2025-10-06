@@ -379,12 +379,12 @@ export default function OrderManager() {
                           </p>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Badge className={`${statusConfig[selectedOrder.status].color} border px-3 py-1`}>
+                          {/* <Badge className={`${statusConfig[selectedOrder.status]?.color} border px-3 py-1`}>
                             {React.createElement(statusConfig[selectedOrder.status].icon, {
                               className: "h-4 w-4 mr-2",
                             })}
                             {selectedOrder.status.toLowerCase()}
-                          </Badge>
+                          </Badge> */}
                           <Badge variant="secondary" className="px-3 py-1">
                             {selectedOrder.type === "DELIVERY" ? (
                               <Truck className="h-4 w-4 mr-2" />
