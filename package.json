@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next build --no-lint",
-    "build": " next build ",
+    "dev": "next build ",
+    "build": " next build --no-lint ",
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "prisma generate",
