@@ -1,41 +1,12 @@
-# version: '3.8'
+version: '3.9'
 
 services:
-  # Database service (e.g., PostgreSQL)
   db:
-
-    image: postgres:13
-    container_name: postgres_db
+    image: postgres
+    ports:
+      - "5431:5432"
+    container_name: nlpg
     environment:
-      POSTGRES_USER: postgres
+      # POSTGRES_USER: myuser
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydatabase
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    ports:
-      -  "5432:5432" 
-
-  # Prisma service (Next.js application)
-  app:
-    # image: next-js
-    container_name: my-nextjs-app
-    build: .
-    ports:
-      - "3000:3000"
-    volumes:
-      - .:/app  # Mount your local files into the container
-      - /app/node_modules  # Keep node_modules isolated
-    env_file:
-      - .env   # this loads all your env vars from your .env file
-    depends_on:
-      - db
-    networks:
-      - app-network
-
-volumes:
-  db_data:
-
-networks:
-  app-network:
+      # POSTGRES_DB: mydatabase

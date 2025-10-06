@@ -6,9 +6,19 @@ import { Package, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/toggle-theme";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [currentHash, setCurrentHash] = useState("");
+
+  // Track hash changes for scroll
+  useEffect(() => {
+    const handleHashChange = () => setCurrentHash(window.location.hash);
+    handleHashChange();
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
 
   const navLinks = [
     { href: "#features", label: "Features" },
@@ -36,7 +46,11 @@ export default function Navbar() {
         {/* Navbar */}
         <nav className="hidden md:flex items-center space-x-6 relative">
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
+            const isActive =
+              link.href.startsWith("#")
+                ? currentHash === link.href
+                : pathname === link.href;
+
             return (
               <motion.a
                 key={link.href}
@@ -52,7 +66,7 @@ export default function Navbar() {
                 {/* Animated underline */}
                 <motion.span
                   layoutId="underline"
-                  className={`absolute left-0 -bottom-1 h-[2px] bg-primary rounded-full`}
+                  className="absolute left-0 -bottom-1 h-[2px] bg-primary rounded-full"
                   animate={{
                     width: isActive ? "100%" : "0%",
                   }}

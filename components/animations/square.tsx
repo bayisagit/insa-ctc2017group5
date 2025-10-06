@@ -33,41 +33,83 @@ const Squares: React.FC<SquaresProps> = ({
     hoverFill: CanvasStrokeStyle;
     background: string;
   }>({
-    border: "#999",
-    hoverFill: "#222",
-    background: "#000",
+    border: "#E2E8F0", // Default light border
+    hoverFill: "#F1F5F9", // Default light hover
+    background: "#F8FAFC", // Default light background
   });
 
-  // Resolve CSS variables to actual color strings
+  // Function to resolve CSS custom properties
+  const resolveCssVariable = (variableName: string): string => {
+    // Handle both with and without -- prefix
+    const varName = variableName.startsWith('--') ? variableName : `--${variableName}`;
+    
+    // Get the value from computed styles
+    const value = getComputedStyle(document.documentElement)
+      .getPropertyValue(varName)
+      .trim();
+    
+    // Return the value or a fallback
+    return value || getFallbackColor(varName);
+  };
+
+  // Fallback colors if CSS variables aren't available
+  const getFallbackColor = (variableName: string): string => {
+    const fallbacks: Record<string, string> = {
+      '--accent': '#F97316',
+      '--border': '',
+      '--background': '#F97316',
+      '--muted': '#F97316',
+      '--primary': '#F97316',
+      '--secondary': '#F97316',
+    };
+    
+    return fallbacks[variableName] || '#000000';
+  };
+
+  // Resolve theme colors based on CSS custom properties
   const resolveThemeColors = () => {
-    const root = document.documentElement;
-    const styles = getComputedStyle(root);
-    const resolvedBorder = styles.getPropertyValue("--border").trim() || "#999";
-    const resolvedMuted = styles.getPropertyValue("--muted").trim() || "#222";
-    const resolvedBackground = styles.getPropertyValue("--background").trim() || "#000";
     return {
-      border: borderColor ?? resolvedBorder,
-      hoverFill: hoverFillColor ?? resolvedMuted,
-      background: resolvedBackground,
+      border: borderColor || resolveCssVariable('border'),
+      hoverFill: hoverFillColor || resolveCssVariable('muted'),
+      background: resolveCssVariable('background'),
     };
   };
 
   useEffect(() => {
+    // Initial theme color resolution
     setThemeColors(resolveThemeColors());
+    
+    // Set up observer to detect theme changes
     const observer = new MutationObserver(() => {
       setThemeColors(resolveThemeColors());
     });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
+    observer.observe(document.documentElement, { 
+      attributes: true, 
+      attributeFilter: ['class', 'style'] 
+    });
+    
+    // Also listen for resize events which might affect computed styles
+    const handleResize = () => {
+      setThemeColors(resolveThemeColors());
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
   }, [borderColor, hoverFillColor]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
     const resizeCanvas = () => {
+      if (!canvas) return;
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
       numSquaresX.current = Math.ceil(canvas.width / squareSize) + 1;
@@ -78,7 +120,7 @@ const Squares: React.FC<SquaresProps> = ({
     resizeCanvas();
 
     const drawGrid = () => {
-      if (!ctx) return;
+      if (!ctx || !canvas) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -92,8 +134,7 @@ const Squares: React.FC<SquaresProps> = ({
 
           if (
             hoveredSquareRef.current &&
-            Math.floor((x - startX) / squareSize) ===
-              hoveredSquareRef.current.x &&
+            Math.floor((x - startX) / squareSize) === hoveredSquareRef.current.x &&
             Math.floor((y - startY) / squareSize) === hoveredSquareRef.current.y
           ) {
             ctx.fillStyle = themeColors.hoverFill;
@@ -101,10 +142,12 @@ const Squares: React.FC<SquaresProps> = ({
           }
 
           ctx.strokeStyle = themeColors.border;
+          ctx.lineWidth = 0.5;
           ctx.strokeRect(squareX, squareY, squareSize, squareSize);
         }
       }
 
+      // Create a subtle gradient overlay to blend the edges
       const gradient = ctx.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -113,11 +156,13 @@ const Squares: React.FC<SquaresProps> = ({
         canvas.height / 2,
         Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2
       );
-      gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
-      gradient.addColorStop(1, themeColors.background);
+      // gradient.addColorStop(0, "rgba(255, 255, 255, 0)");
+      // gradient.addColorStop(1, themeColors.background);
 
       ctx.fillStyle = gradient;
+      ctx.globalCompositeOperation = "destination-over";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = "source-over";
     };
 
     const updateAnimation = () => {
@@ -154,6 +199,7 @@ const Squares: React.FC<SquaresProps> = ({
     };
 
     const handleMouseMove = (event: MouseEvent) => {
+      if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
       const mouseX = event.clientX - rect.left;
       const mouseY = event.clientY - rect.top;
@@ -197,6 +243,10 @@ const Squares: React.FC<SquaresProps> = ({
     <canvas
       ref={canvasRef}
       className="w-full h-full border-none block"
+      style={{ 
+        background: themeColors.background,
+        transition: 'background-color 0.3s ease'
+      }}
     ></canvas>
   );
 };
