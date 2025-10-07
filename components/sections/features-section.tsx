@@ -14,7 +14,8 @@ export function FeaturesSection() {
       ),
       title: "Fast Delivery",
       description: "Get your orders delivered in 30 minutes or less with our express delivery service.",
-      color: "from-blue-500 to-cyan-500",
+      colorFrom: "var(--primary)",
+      colorTo: "var(--accent)",
     },
     {
       icon: (
@@ -25,7 +26,8 @@ export function FeaturesSection() {
       ),
       title: "Secure Payments",
       description: "Multiple payment options with bank-level security and encryption.",
-      color: "from-green-500 to-emerald-500",
+      colorFrom: "var(--secondary)",
+      colorTo: "var(--accent)",
     },
     {
       icon: (
@@ -35,7 +37,8 @@ export function FeaturesSection() {
       ),
       title: "Quality Products",
       description: "Curated selection of high-quality products from trusted sellers.",
-      color: "from-yellow-500 to-orange-500",
+      colorFrom: "var(--accent)",
+      colorTo: "var(--primary)",
     },
     {
       icon: (
@@ -46,7 +49,8 @@ export function FeaturesSection() {
       ),
       title: "Real-time Tracking",
       description: "Track your delivery in real-time with live GPS location updates.",
-      color: "from-purple-500 to-pink-500",
+      colorFrom: "var(--primary)",
+      colorTo: "var(--secondary)",
     },
     {
       icon: (
@@ -57,7 +61,8 @@ export function FeaturesSection() {
       ),
       title: "Best Prices",
       description: "Competitive pricing with exclusive deals and discounts daily.",
-      color: "from-red-500 to-rose-500",
+      colorFrom: "var(--destructive)",
+      colorTo: "var(--accent)",
     },
     {
       icon: (
@@ -68,12 +73,13 @@ export function FeaturesSection() {
       ),
       title: "24/7 Support",
       description: "Round-the-clock customer support to help with any questions.",
-      color: "from-indigo-500 to-blue-500",
+      colorFrom: "var(--secondary)",
+      colorTo: "var(--primary)",
     },
   ];
 
   return (
-    <section id="features" className="py-20 px-4 bg-muted/30 relative">
+    <section id="features" className="py-20 px-4" style={{ backgroundColor: "var(--muted)/30" }}>
       <div className="container mx-auto">
         {/* Header */}
         <motion.div
@@ -82,11 +88,11 @@ export function FeaturesSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Why Choose{" "}
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Merkato</span>
+          <h2 style={{ color: "var(--foreground)" }} className="text-4xl md:text-5xl font-bold mb-4">
+            Why Choose Merkato
+    
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p style={{ color: "var(--muted-foreground)" }} className="text-xl max-w-2xl mx-auto">
             Experience the future of e-commerce with features designed for your convenience
           </p>
         </motion.div>
@@ -101,15 +107,23 @@ export function FeaturesSection() {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="border-border hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+              <Card
+                className="border-border hover:border-primary/50 transition-all duration-300 group"
+                style={{ backgroundColor: "var(--card)", color: "var(--card-foreground)" }}
+              >
                 <CardContent className="p-6">
                   <div
-                    className={`w-14 h-14 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                    className="w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+                    style={{
+                      background: `linear-gradient(to bottom right, ${feature.colorFrom}, ${feature.colorTo})`,
+                    }}
                   >
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
+                  <h3 style={{ color: "var(--foreground)" }} className="text-xl font-bold mb-2">
+                    {feature.title}
+                  </h3>
+                  <p style={{ color: "var(--muted-foreground)" }}>{feature.description}</p>
                 </CardContent>
               </Card>
             </motion.div>

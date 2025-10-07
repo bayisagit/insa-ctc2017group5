@@ -16,11 +16,11 @@ export default function HomePage() {
     <div className="relative min-h-screen bg-background">
       <Navbar />
       <HeroSection />
-      <FeaturesSection />
+      {/* <FeaturesSection /> */}
       <CategoriesSection />
       <HowItWorksSection />
       <TestimonialsSection />
-      <StatsSection />
+      {/* <StatsSection /> */}
       <AppDownloadSection />
       <CTASection />
       <Footer />

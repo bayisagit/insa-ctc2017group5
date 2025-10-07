@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Root variables for light mode */
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -12,6 +13,7 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
+  --primary-gradient: linear-gradient(to right, #06b6d4, #3b82f6, #8b5cf6); /* Added gradient */
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -39,6 +41,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* Dark mode variables */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -48,6 +51,7 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.985 0 0);
   --primary-foreground: oklch(0.205 0 0);
+  --primary-gradient: linear-gradient(to right, #06b6d4, #3b82f6, #8b5cf6); /* Gradient stays consistent */
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -74,6 +78,7 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* Inline theme variables for Tailwind components */
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -85,6 +90,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-gradient: var(--primary-gradient); /* Gradient variable */
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
@@ -115,6 +121,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Base styling */
 @layer base {
   * {
     @apply border-border outline-ring/50;

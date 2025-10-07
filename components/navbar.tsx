@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, ShoppingCart, User } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { ModeToggle } from "./sections/toggle-theme";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,15 +57,7 @@ export function Navbar() {
               <ShoppingCart className="w-5 h-5" />
             </Button>
 
-            {/* Desktop Login Icon */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLoginRedirect}
-              title="Login"
-            >
-              <User className="w-5 h-5" />
-            </Button>
+            <ModeToggle />
 
             {/* Desktop Login Text Button */}
             <Button
