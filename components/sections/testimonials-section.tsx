@@ -29,7 +29,7 @@ export function TestimonialsSection() {
       avatar: "/smiling-woman.png",
       rating: 5,
       comment:
-        "As a working mom, AddisGo is a lifesaver. I can order groceries during lunch break and have them delivered before dinner!",
+        "As a working mom, Merkato is a lifesaver. I can order groceries during lunch break and have them delivered before dinner!",
     },
   ]
 

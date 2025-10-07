@@ -1,13 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Menu, X, ShoppingCart, User } from "lucide-react"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Menu, X, ShoppingCart, User } from "lucide-react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLoginRedirect = () => {
+    setIsOpen(false);
+    router.push("/login");
+  };
 
   return (
     <motion.nav
@@ -23,7 +30,7 @@ export function Navbar() {
               <ShoppingCart className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              AddisGo
+              Merkato
             </span>
           </Link>
 
@@ -48,10 +55,30 @@ export function Navbar() {
             <Button variant="ghost" size="icon">
               <ShoppingCart className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="icon">
+
+            {/* Desktop Login Icon */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLoginRedirect}
+              title="Login"
+            >
               <User className="w-5 h-5" />
             </Button>
-            <Button className="bg-gradient-to-r from-primary to-accent text-white">Order Now</Button>
+
+            {/* Desktop Login Text Button */}
+            <Button
+              onClick={handleLoginRedirect}
+              variant="outline"
+              className=""
+            >
+              Login
+            </Button>
+
+            {/* Order Now */}
+            <Button className="bg-gradient-to-r from-primary to-accent text-white">
+              Order Now
+            </Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -99,11 +126,18 @@ export function Navbar() {
               >
                 Reviews
               </Link>
-              <Button className="w-full bg-gradient-to-r from-primary to-accent text-white">Order Now</Button>
+
+              {/* Login Redirect for Mobile */}
+              <Button
+                onClick={handleLoginRedirect}
+                className="w-full bg-gradient-to-r from-primary to-accent text-white"
+              >
+                Login
+              </Button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </motion.nav>
-  )
+  );
 }
